@@ -13,7 +13,7 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export function MilitaryTicker() {
-  const { data: events, isLoading } = useMilitaryTracker();
+  const { data: events, isLoading, isError } = useMilitaryTracker();
 
   if (isLoading || !events || events.length === 0) {
     return (
@@ -23,7 +23,11 @@ export function MilitaryTicker() {
           MIL-TRACK
         </span>
         <span className="text-[10px] text-text-muted animate-pulse">
-          {isLoading ? 'SCANNING...' : 'NO MILITARY EVENTS DETECTED'}
+          {isLoading
+            ? 'SCANNING...'
+            : isError
+              ? 'SOURCE UNAVAILABLE'
+              : 'NO EVENTS IN CURRENT WINDOW'}
         </span>
       </div>
     );

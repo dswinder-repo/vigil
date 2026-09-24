@@ -95,20 +95,19 @@ export default function App() {
     });
   }, [allEvents, filters]);
 
+  // Only sources that can actually return something. ReliefWeb, Meteoalarm and
+  // the FAA TFR feed were retired upstream; listing them put permanent red
+  // lights in the header for feeds that are never coming back.
   const sourceStatuses = {
     usgs: getStatus(usgs),
     eonet: getStatus(eonet),
     gdelt: getStatus(gdelt),
-    reliefweb: getStatus(reliefweb),
-    'reliefweb-conflict': getStatus(reliefwebConflict),
     nws: getStatus(nws),
     gdacs: getStatus(gdacs),
     cisa: getStatus(cisa),
     firms: getStatus(firms),
     who: getStatus(who),
     'space-weather': getStatus(spaceWeather),
-    meteoalarm: getStatus(meteoalarm),
-    faaTfr: getStatus(faaTfr),
     'nuclear-activity': getStatus(nuclearActivity),
   };
 

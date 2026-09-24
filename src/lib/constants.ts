@@ -38,58 +38,47 @@ export const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/
 export const INITIAL_VIEW = { longitude: 0, latitude: 20, zoom: 2 };
 
 // --- Event source endpoints ---
+// ---------------------------------------------------------------------------
+// Server-side snapshots
+// ---------------------------------------------------------------------------
+// The sources below refuse requests that come from a browser. The dashboard
+// used to route them through free public relay servers, which throttled, went
+// down, and returned error pages that looked like success — which is why
+// panels kept emptying for no visible reason.
+//
+// A scheduled job now copies each source every fifteen minutes into
+// vigil/data/raw/ and the dashboard reads its own domain instead. See
+// scripts/fetch-feeds.mjs and .github/workflows/feeds.yml.
+const SNAP = `${import.meta.env.BASE_URL}data/raw/`;
+
 export const API_USGS = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson';
 export const API_EONET = 'https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=50';
 // Category-specific GDELT queries — each query uses unambiguous, high-signal terms
 // to minimize cross-category contamination. "virus", "disease", "protest", "war"
 // (generic) are excluded because GDELT returns geographic context snippets, not full
 // articles, so broad terms produce false positives.
-const GDELT_BASE = 'https://api.gdeltproject.org/api/v2/geo/geo?query=';
-const GDELT_SUFFIX = '%20sourcelang%3Aenglish&format=GeoJSON&maxrows=100';
-export const GDELT_QUERIES: Array<{ category: string; url: string }> = [
-  // Active combat vocabulary — "besieged" removed (too metaphorical in business press).
-  // Added modern warfare terms: artillery, missiles, drone strikes, ground offensive, etc.
-  { category: 'conflict', url: `${GDELT_BASE}(airstrike%20OR%20airstrikes%20OR%20shelling%20OR%20frontline%20OR%20warzone%20OR%20bombardment%20OR%20counteroffensive%20OR%20invasion%20OR%20ceasefire%20OR%20casualties%20OR%20artillery%20OR%20missile%20OR%20missiles%20OR%20drone%20strike%20OR%20drone%20attack%20OR%20military%20offensive%20OR%20ground%20offensive%20OR%20troops%20deployed%20OR%20military%20operation%20OR%20escalation%20OR%20occupied%20territory%20OR%20arms%20shipment)${GDELT_SUFFIX}` },
-  // High-intensity civil unrest — added martial law, state of emergency, mass arrests, curfew
-  { category: 'unrest', url: `${GDELT_BASE}(riot%20OR%20coup%20OR%20uprising%20OR%20crackdown%20OR%20insurrection%20OR%20looting%20OR%20mutiny%20OR%20junta%20OR%20revolution%20OR%20martial%20law%20OR%20state%20of%20emergency%20OR%20mass%20arrests%20OR%20curfew)${GDELT_SUFFIX}` },
-  // Cyber compound words — "vulnerability" removed (matches political/economic contexts)
-  { category: 'cyber', url: `${GDELT_BASE}(cyberattack%20OR%20ransomware%20OR%20malware%20OR%20hackers%20OR%20hacking%20OR%20phishing%20OR%20cyberespionage%20OR%20spyware%20OR%20DDoS%20OR%20botnet)${GDELT_SUFFIX}` },
-  // Specific pathogens only — "virus", "disease" removed (match computer virus, heart disease, etc.)
-  { category: 'disease', url: `${GDELT_BASE}(outbreak%20OR%20epidemic%20OR%20cholera%20OR%20ebola%20OR%20mpox%20OR%20dengue%20OR%20measles%20OR%20tuberculosis%20OR%20influenza%20OR%20plague)${GDELT_SUFFIX}` },
-  { category: 'disaster', url: `${GDELT_BASE}(earthquake%20OR%20tsunami%20OR%20hurricane%20OR%20flood%20OR%20wildfire%20OR%20eruption%20OR%20tornado%20OR%20cyclone%20OR%20typhoon%20OR%20avalanche)${GDELT_SUFFIX}` },
-  // Humanitarian — added aid convoy, civilian casualties, war crimes, ethnic cleansing
-  { category: 'humanitarian', url: `${GDELT_BASE}(famine%20OR%20starvation%20OR%20displacement%20OR%20refugees%20OR%20genocide%20OR%20atrocities%20OR%20malnutrition%20OR%20trafficking%20OR%20aid%20convoy%20OR%20civilian%20casualties%20OR%20war%20crimes%20OR%20ethnic%20cleansing)${GDELT_SUFFIX}` },
-  // Political — dedicated query for significant political events
-  { category: 'political', url: `${GDELT_BASE}(sanctions%20OR%20impeachment%20OR%20assassination%20OR%20referendum%20OR%20treaty%20OR%20embargo%20OR%20geopolitical)${GDELT_SUFFIX}` },
-  // Naval / maritime conflict — excludes "warship", "naval fleet", "aircraft carrier" already in
-  // API_GDELT_MILITARY; focuses on sea-battle events, blockades, and littoral combat.
-  { category: 'conflict', url: `${GDELT_BASE}(naval%20blockade%20OR%20sea%20battle%20OR%20maritime%20conflict%20OR%20naval%20bombardment%20OR%20naval%20strike%20OR%20destroyer%20OR%20frigate%20OR%20submarine%20OR%20naval%20exercise%20OR%20naval%20clash%20OR%20littoral%20combat%20OR%20coast%20guard%20clash)${GDELT_SUFFIX}` },
-  // Nuclear / WMD posturing — avoids "missile" (in main conflict query); focuses on
-  // nuclear-specific vocabulary and WMD escalation signals.
-  { category: 'conflict', url: `${GDELT_BASE}(nuclear%20threat%20OR%20nuclear%20weapons%20OR%20ICBM%20OR%20ballistic%20missile%20OR%20hypersonic%20missile%20OR%20nuclear%20deterrent%20OR%20warhead%20OR%20nuclear%20arsenal%20OR%20tactical%20nuclear%20OR%20strategic%20nuclear%20OR%20nuclear%20test%20OR%20dirty%20bomb)${GDELT_SUFFIX}` },
-  // Economic warfare — avoids "sanctions" and "embargo" (in political query); targets
-  // coercive economic instruments beyond conventional diplomacy.
-  { category: 'political', url: `${GDELT_BASE}(trade%20war%20OR%20export%20controls%20OR%20arms%20embargo%20OR%20technology%20ban%20OR%20asset%20freeze%20OR%20SWIFT%20ban%20OR%20financial%20sanctions%20OR%20economic%20coercion%20OR%20supply%20chain%20attack%20OR%20investment%20ban%20OR%20tariff%20retaliation)${GDELT_SUFFIX}` },
-];
+// One file, written by the scheduled job, with each item already sorted into
+// a category. GDELT's geo endpoint was retired; see scripts/fetch-feeds.mjs.
+export const GDELT_FEED_URL = `${import.meta.env.BASE_URL}data/world.json`;
 // Keep legacy single URL for backward compat reference
-export const API_GDELT = GDELT_QUERIES[0].url;
-export const API_RELIEFWEB = 'https://api.reliefweb.int/v1/disasters?appname=vigil&limit=50&sort[]=date:desc';
+export const API_GDELT = GDELT_FEED_URL;
+export const API_RELIEFWEB = SNAP + 'reliefweb-disasters.json';
 export const API_NWS_ALERTS = 'https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe';
 
 // --- Additional event sources ---
-export const API_GDACS = 'https://www.gdacs.org/xml/rss.xml';
-export const API_CISA_KEV = 'https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json';
+export const API_GDACS = SNAP + 'gdacs.xml';
+export const API_CISA_KEV = SNAP + 'cisa-kev.json';
 export const API_NASA_FIRMS = import.meta.env.VITE_FIRMS_API_KEY
   ? `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${import.meta.env.VITE_FIRMS_API_KEY}/VIIRS_SNPP_NRT/world/1`
   : '';
-export const API_WHO_DON = 'https://www.who.int/feeds/entity/don/en/rss.xml';
+export const API_WHO_DON = SNAP + 'who-don.xml';
 export const API_NOAA_SPACE_WEATHER = 'https://services.swpc.noaa.gov/products/alerts.json';
 
 // --- Market endpoints ---
 export const API_COINGECKO = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,dogecoin&vs_currencies=usd&include_24hr_change=true';
-export const API_MANIFOLD = 'https://api.manifold.markets/v0/search-markets?sort=score&filter=open&limit=20';
-export const API_POLYMARKET = 'https://gamma-api.polymarket.com/markets?closed=false&limit=20';
-export const API_KALSHI = 'https://trading-api.kalshi.com/trade-api/v2/markets';
+export const API_MANIFOLD = SNAP + 'manifold.json';
+export const API_POLYMARKET = SNAP + 'polymarket.json';
+export const API_KALSHI = SNAP + 'kalshi.json';
 
 // --- RSS News feeds (fetched via CORS proxy) ---
 export const RSS_FEEDS = [
@@ -171,8 +160,7 @@ export const OSINT_RSS_FEEDS = [
 export const API_GDELT_MILITARY =
   'https://api.gdeltproject.org/api/v2/doc/doc?query=(aircraft+carrier+OR+naval+fleet+OR+military+deployment+OR+troops+deploy+OR+missile+strike+OR+military+exercise+OR+warship+OR+airstrike+OR+military+operation+OR+carrier+strike+group+OR+fighter+jet+OR+submarine+OR+amphibious+assault)&mode=artlist&maxrecords=75&sort=datedesc&format=json&sourcelang=english&TIMESPAN=1440';
 
-export const API_NUCLEAR_ACTIVITY =
-  'https://api.gdeltproject.org/api/v2/doc/doc?query=%22nuclear%22%20OR%20%22radiation%22%20OR%20%22IAEA%22%20OR%20%22radioactive%22%20OR%20%22nuclear%20reactor%22%20OR%20%22enrichment%22%20OR%20%22weapons%20grade%22%20OR%20%22dirty%20bomb%22%20OR%20%22nuclear%20test%22&mode=artlist&maxrecords=50&timespan=1440&sort=DateDesc&format=json';
+export const API_NUCLEAR_ACTIVITY = GDELT_FEED_URL;
 
 // --- Poll intervals (ms) ---
 export const POLL_MILITARY = 300_000;
@@ -195,9 +183,9 @@ export const POLL_FIRMS = 300_000;
 export const POLL_WHO = 600_000;
 export const POLL_SPACE_WEATHER = 300_000;
 
-export const API_METEOALARM = 'https://feeds.meteoalarm.org/api/v1/warnings/feeds-meteoalarm';
+export const API_METEOALARM = SNAP + 'meteoalarm.json';
 export const POLL_METEOALARM = 600_000; // 10 minutes
 
 // --- FAA Temporary Flight Restrictions ---
-export const API_FAA_TFR = 'https://tfr.faa.gov/tfr2/tfr_feed_geojson.json';
+export const API_FAA_TFR = SNAP + 'faa-tfr.json';
 export const POLL_FAA_TFR = 900_000; // 15 minutes

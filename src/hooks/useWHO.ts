@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { API_WHO_DON, CORS_PROXIES, POLL_WHO } from '@/lib/constants';
+import { API_WHO_DON, POLL_WHO } from '@/lib/constants';
 import { normalizeWHO } from '@/lib/normalizers';
 import type { NormalizedEvent } from '@/lib/types';
 
@@ -15,20 +15,10 @@ export function useWHO() {
 }
 
 async function fetchWHO(): Promise<NormalizedEvent[]> {
-  let text = '';
-  for (const proxy of CORS_PROXIES) {
-    try {
-      const res = await fetch(proxy + encodeURIComponent(API_WHO_DON), {
-        signal: AbortSignal.timeout(15_000),
-      });
-      if (!res.ok) continue;
-      text = await res.text();
-      if (text.includes('<item>')) break;
-      text = '';
-    } catch {
-      continue;
-    }
-  }
-  if (!text) throw new Error('WHO: all proxies failed');
-  return normalizeWHO(text);
+  const res = await fetch(API_WHO_DON, {
+    cache: 'no-cache',
+    signal: AbortSignal.timeout(15_000),
+  });
+  if (!res.ok) throw new Error(`WHO: ${res.status}`);
+  return normalizeWHO(await res.text());
 }

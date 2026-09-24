@@ -21,15 +21,15 @@ function scoreTextColor(score: number): string {
 }
 
 function scoreDescription(score: number): string {
-  if (score <= 20) return 'low — media coverage is neutral or positive';
-  if (score <= 50) return 'moderate — some adversarial framing detected';
-  if (score <= 75) return 'elevated — significant hostile coverage';
-  return 'critical — highly aggressive media framing, historically rare';
+  if (score <= 20) return 'low — barely in the news cycle';
+  if (score <= 50) return 'moderate — steady coverage';
+  if (score <= 75) return 'elevated — heavy coverage';
+  return 'critical — saturating the news cycle';
 }
 
-function gdeltUrl(a: string, b: string): string {
-  const query = encodeURIComponent(`${a} ${b}`);
-  return `https://gdelt.github.io/#api=doc&query=${query}&mode=artlist&maxrecords=25&sort=DateDesc`;
+function sourceUrl(a: string, b: string): string {
+  const query = encodeURIComponent(`${a} ${b} when:1d`);
+  return `https://news.google.com/search?q=${query}&hl=en-US&gl=US&ceid=US:en`;
 }
 
 function TrendIndicator({ trend }: { trend: ThreatPair['trend'] }) {
@@ -39,9 +39,9 @@ function TrendIndicator({ trend }: { trend: ThreatPair['trend'] }) {
 }
 
 function trendLabel(trend: ThreatPair['trend']): string {
-  if (trend === 'up') return '↑ Rising tension in the last 24h';
-  if (trend === 'down') return '↓ Falling tension in the last 24h';
-  return '— Stable tension in the last 24h';
+  if (trend === 'up') return '↑ Coverage rising since the previous reading';
+  if (trend === 'down') return '↓ Coverage falling since the previous reading';
+  return '— Coverage steady since the previous reading';
 }
 
 function trendTextColor(trend: ThreatPair['trend']): string {
@@ -56,35 +56,30 @@ function trendTextColor(trend: ThreatPair['trend']): string {
 
 function ThreatDetail({ pair }: { pair: ThreatPair }) {
   const desc = scoreDescription(pair.score);
-  const url = gdeltUrl(pair.a, pair.b);
+  const url = sourceUrl(pair.a, pair.b);
 
   return (
     <div className="border-l-2 border-green-700 bg-gray-900/70 mx-3 mb-1 px-3 py-2 font-mono text-[11px] text-gray-400 animate-fadeIn space-y-2">
       {/* Summary sentence */}
       <p className="text-gray-300 leading-relaxed">
-        This score tracks how aggressively GDELT-indexed media is covering{' '}
-        <span className="text-white">{pair.a}–{pair.b}</span> relations. Higher = more
-        hostile coverage. Z-score above 2.0 is historically elevated.
+        How much coverage{' '}
+        <span className="text-white">{pair.a}–{pair.b}</span> drew in the last 24 hours,
+        relative to the busiest pair on the board.
+        This is attention, not intent: a spike means the story is moving, and it is a
+        prompt to go read, not a verdict on what is happening.
       </p>
 
       {/* Signal intensity */}
       <div>
-        <span className="text-gray-600 uppercase tracking-widest text-[9px]">Signal Intensity</span>
-        <p className="mt-0.5">
-          GDELT measures tone deviation across{' '}
-          <span className="text-green-400">{pair.articles}</span> articles in the 48h
-          window. Score{' '}
-          <span className={scoreTextColor(pair.score)}>{pair.score}</span> ={' '}
-          <span className="text-gray-300">{desc}</span>.
-        </p>
-      </div>
-
-      {/* Article count */}
-      <div>
         <span className="text-gray-600 uppercase tracking-widest text-[9px]">Coverage Volume</span>
         <p className="mt-0.5">
-          <span className="text-green-400">{pair.articles}</span> articles citing this
-          bilateral relationship in the past 48 hours.
+          <span className="text-green-400">{pair.articles}</span> distinct stories in the
+          last 24 hours, measured against the busiest pair on the board. Score{' '}
+          <span className={scoreTextColor(pair.score)}>{pair.score}</span> ={' '}
+          <span className="text-gray-300">{desc}</span>.
+          {pair.stale && (
+            <span className="text-yellow-600"> Last reading carried forward.</span>
+          )}
         </p>
       </div>
 
@@ -94,7 +89,7 @@ function ThreatDetail({ pair }: { pair: ThreatPair }) {
         <p className={`mt-0.5 ${trendTextColor(pair.trend)}`}>{trendLabel(pair.trend)}</p>
       </div>
 
-      {/* GDELT link */}
+      {/* Source link */}
       <div className="pt-1 border-t border-gray-800">
         <a
           href={url}
@@ -103,7 +98,7 @@ function ThreatDetail({ pair }: { pair: ThreatPair }) {
           className="text-green-500 hover:text-green-300 underline underline-offset-2 transition-colors"
           onClick={(e) => e.stopPropagation()}
         >
-          View source articles on GDELT →
+          Read the coverage →
         </a>
       </div>
     </div>
@@ -220,9 +215,9 @@ export function ThreatPanel() {
       <div className="flex items-center gap-2 px-3 py-1 border-b border-gray-800 font-mono text-[8px] uppercase tracking-widest text-gray-600 sticky top-0 bg-bg-panel-1 z-10">
         <span className="w-4 shrink-0">#</span>
         <span className="w-36 shrink-0">Pair</span>
-        <span className="flex-1" title="GDELT tone deviation score (0–100). Higher = more hostile media coverage.">Score</span>
-        <span className="w-6 text-right" title="Number of GDELT-indexed articles citing this bilateral relationship in the past 48 hours.">Articles</span>
-        <span className="w-3 text-center" title="24h trend: ↑ Rising · ↓ Falling · → Stable">Trend</span>
+        <span className="flex-1" title="Attention relative to the busiest pair on the board. 100 = the pair drawing the most coverage right now.">Volume</span>
+        <span className="w-6 text-right" title="Distinct stories about this pair in the last 24 hours. Syndicated copies of one story count once.">Stories</span>
+        <span className="w-3 text-center" title="Change since the previous reading: ↑ Rising · ↓ Falling · → Steady">Trend</span>
         <span className="w-3 shrink-0" />
       </div>
 

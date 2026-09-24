@@ -5,7 +5,7 @@ const UP_COLOR = '#00cc44';
 const DOWN_COLOR = '#EF4444';
 
 export function MarketsTicker() {
-  const { data: quotes } = useMarketsTicker();
+  const { data: quotes, isError } = useMarketsTicker();
 
   if (!quotes || quotes.length === 0) {
     return (
@@ -15,7 +15,7 @@ export function MarketsTicker() {
           MARKETS
         </span>
         <span className="text-[10px] text-text-muted animate-pulse">
-          LOADING MARKET DATA...
+          {isError ? 'MARKET DATA UNAVAILABLE' : 'LOADING MARKET DATA...'}
         </span>
       </div>
     );

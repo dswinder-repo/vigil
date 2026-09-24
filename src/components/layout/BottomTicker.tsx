@@ -9,7 +9,7 @@ interface TickerEntry {
 }
 
 export function BottomTicker() {
-  const { data: news } = useNewsFeed();
+  const { data: news, isError } = useNewsFeed();
 
   const entries: TickerEntry[] = [];
 
@@ -32,7 +32,7 @@ export function BottomTicker() {
           INTL NEWS
         </span>
         <span className="text-[10px] text-text-muted animate-pulse">
-          AWAITING FEED DATA...
+          {isError ? 'NEWS FEED UNAVAILABLE' : 'AWAITING FEED DATA...'}
         </span>
       </div>
     );

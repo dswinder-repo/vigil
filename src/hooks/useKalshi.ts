@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { API_KALSHI, CORS_PROXIES, POLL_KALSHI } from '@/lib/constants';
+import { API_KALSHI, POLL_KALSHI } from '@/lib/constants';
 
 export interface KalshiMarket {
   id: string;
@@ -9,11 +9,10 @@ export interface KalshiMarket {
   volume: number;
 }
 
-async function fetchKalshiWithProxy(proxyUrl: string): Promise<KalshiMarket[]> {
-  const targetUrl = `${API_KALSHI}?status=open&limit=30`;
-  const url = proxyUrl + encodeURIComponent(targetUrl);
-
-  const res = await fetch(url, {
+/** Read from our own domain; the scheduled job does the Kalshi call. */
+async function fetchKalshi(): Promise<KalshiMarket[]> {
+  const res = await fetch(API_KALSHI, {
+    cache: 'no-cache',
     headers: { accept: 'application/json' },
     signal: AbortSignal.timeout(12_000),
   });
@@ -49,19 +48,7 @@ async function fetchKalshiWithProxy(proxyUrl: string): Promise<KalshiMarket[]> {
 export function useKalshi() {
   return useQuery<KalshiMarket[]>({
     queryKey: ['kalshi'],
-    queryFn: async () => {
-      for (let i = 0; i < CORS_PROXIES.length; i++) {
-        try {
-          const result = await fetchKalshiWithProxy(CORS_PROXIES[i]);
-          return result;
-        } catch {
-          if (i === CORS_PROXIES.length - 1) {
-            throw new Error('All Kalshi proxies failed');
-          }
-        }
-      }
-      return [];
-    },
+    queryFn: fetchKalshi,
     refetchInterval: POLL_KALSHI,
     staleTime: POLL_KALSHI / 2,
     retry: 1,

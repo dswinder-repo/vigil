@@ -602,8 +602,10 @@ function gdacsAlertSeverity(level: string): Severity {
   const lower = level.toLowerCase().trim();
   if (lower === 'red') return 5;
   if (lower === 'orange') return 4;
-  if (lower === 'green') return 3;
-  return 3;
+  // Green is GDACS saying "this happened and nobody is at risk". Rated the
+  // same as an orange alert it buried everything else on the board.
+  if (lower === 'green') return 1;
+  return 2;
 }
 
 function gdacsCategory(text: string): NormalizedEvent['category'] {
@@ -1237,4 +1239,66 @@ export function normalizeReliefWebConflict(data: unknown): NormalizedEvent[] {
   }
 
   return results;
+}
+
+// ---------------------------------------------------------------------------
+// GDELT article feed
+// ---------------------------------------------------------------------------
+
+/**
+ * GDELT used to expose a geo endpoint that returned events with coordinates.
+ * It was retired and now answers 404, so these come from the article endpoint
+ * instead: headlines with a source country rather than a mapped location.
+ *
+ * An article whose country we cannot place is left out. The alternative is a
+ * coordinate of [0, 0], which drops a pin in the Atlantic off west Africa and
+ * makes the map look broken.
+ */
+export interface GdeltFeedItem {
+  title: string;
+  url?: string;
+  domain?: string;
+  country?: string;
+  timestamp: string;
+  category: string;
+  severity: number;
+  stale?: boolean;
+}
+
+export function normalizeGdeltDoc(data: unknown): NormalizedEvent[] {
+  const items = (data as { items?: GdeltFeedItem[] })?.items ?? [];
+  const out: NormalizedEvent[] = [];
+
+  items.forEach((a, i) => {
+    const title = decodeHtmlEntities((a.title ?? '').trim());
+    if (title.length < 12) return;
+
+    const coords = conflictCountryCoords(a.country ?? '');
+    if (!coords) return;
+
+    out.push({
+      id: `gdelt-${a.category}-${i}-${a.timestamp}`,
+      source: 'gdelt',
+      category: a.category as NormalizedEvent['category'],
+      severity: (Math.min(5, Math.max(1, a.severity || 2))) as Severity,
+      title,
+      summary: a.domain ? `${a.domain} — ${a.country}` : (a.country ?? 'GDELT'),
+      coordinates: coords,
+      timestamp: a.timestamp,
+      url: a.url,
+      metadata: { domain: a.domain, sourcecountry: a.country, category: a.category },
+    });
+  });
+
+  return out;
+}
+
+function decodeHtmlEntities(str: string): string {
+  return str
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
 }
