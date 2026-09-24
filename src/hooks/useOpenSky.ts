@@ -12,21 +12,54 @@ export interface Aircraft {
 }
 
 /**
- * Off.
+ * Military aircraft currently transmitting a position.
  *
- * OpenSky closed anonymous access to the live state feed — it answers 401 now
- * and wants an OAuth client, which means registering an account and holding a
- * secret. A static site cannot hold a secret, so this would have to be fetched
- * by the scheduled job with the credentials kept in GitHub Actions secrets.
+ * This used to call OpenSky from the browser, which answers 401 there. The
+ * scheduled job collects it instead, from adsb.lol's military feed — no
+ * credentials, and it carries the aircraft worth looking at rather than every
+ * airliner in the sky.
  *
- * Until then it returns nothing rather than throwing a 401 on every poll.
+ * Positions are as of the last collection, so they are minutes old. That is
+ * fine for seeing where activity is concentrated and wrong for anything that
+ * needs a live track.
  */
+const FEED_URL = `${import.meta.env.BASE_URL}data/raw/aircraft.json`;
+
+interface AdsbAircraft {
+  hex?: string;
+  flight?: string;
+  t?: string;
+  desc?: string;
+  lat?: number;
+  lon?: number;
+  alt_baro?: number | string;
+  gs?: number;
+  track?: number;
+}
+
 export function useOpenSky() {
   return useQuery<Aircraft[]>({
-    queryKey: ['opensky'],
-    queryFn: async () => [],
-    staleTime: Infinity,
-    enabled: false,
+    queryKey: ['military-aircraft'],
+    queryFn: async () => {
+      const res = await fetch(FEED_URL, { cache: 'no-cache' });
+      if (!res.ok) throw new Error(`aircraft.json: ${res.status}`);
+      const data = (await res.json()) as { ac?: AdsbAircraft[] };
+      return (data.ac ?? [])
+        .filter((a) => typeof a.lat === 'number' && typeof a.lon === 'number')
+        .map((a) => ({
+          icao24: a.hex ?? '',
+          callsign: (a.flight ?? '').trim() || (a.hex ?? '').toUpperCase(),
+          country: a.desc ?? a.t ?? 'Military',
+          longitude: a.lon as number,
+          latitude: a.lat as number,
+          altitude: typeof a.alt_baro === 'number' ? a.alt_baro : 0,
+          velocity: a.gs ?? 0,
+          heading: a.track ?? 0,
+        }));
+    },
+    refetchInterval: 300_000,
+    staleTime: 240_000,
+    retry: 2,
     placeholderData: [],
   });
 }

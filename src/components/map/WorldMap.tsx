@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import type { NormalizedEvent } from '@/lib/types';
@@ -100,6 +100,9 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const readyRef = useRef(false);
+  // State as well as a ref: the effects below need to run again once the map
+  // is ready, and a ref changing does not re-render anything.
+  const [mapReady, setMapReady] = useState(false);
   const eventsRef = useRef(events);
   const selectEvent = useDashboardStore((s) => s.selectEvent);
   const selectedEvent = useDashboardStore((s) => s.selectedEvent);
@@ -552,6 +555,7 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
         map.on('mouseleave', NUCLEAR_LAYER, () => { map.getCanvas().style.cursor = ''; });
 
         readyRef.current = true;
+        setMapReady(true);
       } catch (err) {
         console.error('[WorldMap] Failed to setup layers:', err);
       }
@@ -563,6 +567,7 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
     return () => {
       try {
         readyRef.current = false;
+        setMapReady(false);
         map.remove();
       } catch {
         // Ignore cleanup errors
@@ -581,7 +586,7 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
     } catch (err) {
       console.warn('[WorldMap] Failed to update source data:', err);
     }
-  }, [events, selectedEvent]);
+  }, [events, selectedEvent, mapReady]);
 
   // Sync military bases layer visibility from store
   useEffect(() => {
@@ -593,7 +598,7 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
     } catch (err) {
       console.warn('[WorldMap] Failed to toggle military bases layer:', err);
     }
-  }, [showMilitaryBases]);
+  }, [showMilitaryBases, mapReady]);
 
   // Sync flight data to map source
   useEffect(() => {
@@ -618,7 +623,7 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
     } catch (err) {
       console.warn('[WorldMap] Failed to update flights:', err);
     }
-  }, [openSky.data]);
+  }, [openSky.data, mapReady]);
 
   // Sync flights layer visibility
   useEffect(() => {
@@ -630,7 +635,7 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
     } catch (err) {
       console.warn('[WorldMap] Failed to toggle flights layer:', err);
     }
-  }, [showFlights]);
+  }, [showFlights, mapReady]);
 
   // Sync nuclear facilities layer visibility
   useEffect(() => {
@@ -642,7 +647,7 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
     } catch (err) {
       console.warn('[WorldMap] Failed to toggle nuclear facilities layer:', err);
     }
-  }, [showNuclearFacilities]);
+  }, [showNuclearFacilities, mapReady]);
 
   // Fly to selected
   const flyTo = useCallback((event: NormalizedEvent) => {

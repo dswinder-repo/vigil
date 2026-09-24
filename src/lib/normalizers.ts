@@ -773,10 +773,13 @@ export function normalizeWHO(xml: string): NormalizedEvent[] {
         /outbreak|epidemic|alert|emergency/.test(lower) ? 3 : 2;
 
       // Try to map country mention to coordinates
-      let coordinates: [number, number] = [0, 0];
+      // Left null when no country matches; the item is dropped below rather
+      // than pinned at [0, 0], which is open ocean off west Africa.
+      let coordinates: [number, number] | null = null;
       for (const [country, coords] of Object.entries(WHO_COUNTRY_COORDS)) {
         if (lower.includes(country)) { coordinates = coords; break; }
       }
+      if (!coordinates) return null;
 
       return {
         id: `who-${i}-${Date.parse(pubDate) || Date.now()}`,
@@ -1259,6 +1262,7 @@ export interface GdeltFeedItem {
   url?: string;
   domain?: string;
   country?: string;
+  coordinates?: [number, number];
   timestamp: string;
   category: string;
   severity: number;
@@ -1273,7 +1277,13 @@ export function normalizeGdeltDoc(data: unknown): NormalizedEvent[] {
     const title = decodeHtmlEntities((a.title ?? '').trim());
     if (title.length < 12) return;
 
-    const coords = conflictCountryCoords(a.country ?? '');
+    // The collector already worked out where this is, down to the city where
+    // the headline named one. Only fall back to a country centroid if an older
+    // file is being read that predates the coordinates being sent.
+    const coords =
+      Array.isArray(a.coordinates) && a.coordinates.length === 2
+        ? (a.coordinates as [number, number])
+        : conflictCountryCoords(a.country ?? '');
     if (!coords) return;
 
     out.push({
