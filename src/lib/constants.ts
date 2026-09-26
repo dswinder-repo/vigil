@@ -35,7 +35,9 @@ export const SEVERITY_RADIUS: Record<number, number> = {
 
 export const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
-export const INITIAL_VIEW = { longitude: 0, latitude: 20, zoom: 2 };
+// Opens on the whole world rather than Europe and Africa; the Americas and
+// Asia were off the edge of the pane at zoom 2.
+export const INITIAL_VIEW = { longitude: 10, latitude: 25, zoom: 1.4 };
 
 // --- Event source endpoints ---
 // ---------------------------------------------------------------------------

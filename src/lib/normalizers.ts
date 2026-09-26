@@ -543,7 +543,11 @@ export function normalizeNWS(data: unknown): NormalizedEvent[] {
           sender: props.senderName,
         },
       };
-    });
+    })
+    // A board about the world should not be mostly US county weather. The
+    // most serious alerts are kept; the long tail of routine warnings is not.
+    .sort((a, b) => b.severity - a.severity)
+    .slice(0, 60);
 }
 
 function nwsSeverity(severity: string): Severity {
@@ -724,7 +728,13 @@ export function normalizeNASAFIRMS(csv: string): NormalizedEvent[] {
         metadata: { frp, confidence: conf },
       };
     })
-    .filter((e): e is NonNullable<typeof e> => e !== null);
+    .filter((e): e is NonNullable<typeof e> => e !== null)
+    // NASA reports thousands of hotspots a day, most of them agricultural
+    // burning. Plotted in full they clustered into bubbles reading 300 and 500
+    // that covered whole continents and buried every real event underneath.
+    // The largest fires are worth showing; the rest are background.
+    .sort((a, b) => (b.metadata.frp as number) - (a.metadata.frp as number))
+    .slice(0, 120);
 }
 
 // --- WHO Disease Outbreak News (RSS) ---
