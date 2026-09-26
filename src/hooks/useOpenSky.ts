@@ -19,9 +19,8 @@ export interface Aircraft {
  * credentials, and it carries the aircraft worth looking at rather than every
  * airliner in the sky.
  *
- * Positions are as of the last collection, so they are minutes old. That is
- * fine for seeing where activity is concentrated and wrong for anything that
- * needs a live track.
+ * Positions are as of the last collection. Anything older than 90 minutes is
+ * not shown.
  */
 const FEED_URL = `${import.meta.env.BASE_URL}data/raw/aircraft.json`;
 
@@ -43,7 +42,11 @@ export function useOpenSky() {
     queryFn: async () => {
       const res = await fetch(FEED_URL, { cache: 'no-cache' });
       if (!res.ok) throw new Error(`aircraft.json: ${res.status}`);
-      const data = (await res.json()) as { ac?: AdsbAircraft[] };
+      const data = (await res.json()) as { ac?: AdsbAircraft[]; now?: number };
+      // The collector runs every few hours in practice (GitHub throttles
+      // scheduled jobs), and a plane plotted where it was four hours ago is
+      // worse than no plane. Past 90 minutes, show nothing.
+      if (typeof data.now === 'number' && Date.now() - data.now > 90 * 60 * 1000) return [];
       return (data.ac ?? [])
         .filter((a) => typeof a.lat === 'number' && typeof a.lon === 'number')
         .map((a) => ({
