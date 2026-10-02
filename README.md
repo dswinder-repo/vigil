@@ -1,73 +1,31 @@
-# React + TypeScript + Vite
+# Vigil
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Live at https://winder.works/vigil/
 
-Currently, two official plugins are available:
+A map-first dashboard of world events, markets and military activity, built
+from free public feeds.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## How it runs
 
-## React Compiler
+- **Feeds.** `.github/workflows/feeds.yml` runs `scripts/fetch-feeds.mjs` on a
+  schedule. It fetches every source server-side (sources are listed in
+  `scripts/feeds.config.json`) and commits the results to `public/data/`.
+  Health of every source is in `public/data/status.json`.
+- **Site.** Vercel project `vigil` builds this repo on every push to `main`,
+  including the feed commits. The app is built into `dist/vigil/`, so the
+  deployment answers at `/vigil/`.
+- **Domain.** winder.works is the Vercel project `fwd` (repo `fwd-v2`). Its
+  `next.config.ts` rewrites `/vigil/*` to this project's deployment.
+- **Env.** `VITE_FIRMS_API_KEY` (free NASA FIRMS key) is set on the Vercel
+  project and in a local `.env`. Without it the fire layer is off.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Local
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
+pnpm dev                     # http://localhost:5173/vigil/
+node scripts/fetch-feeds.mjs # refresh public/data/ by hand
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+The repo sits in iCloud Drive, which makes builds very slow there. Build a copy
+outside iCloud if `pnpm build` hangs.

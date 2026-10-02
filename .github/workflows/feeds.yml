@@ -1,0 +1,46 @@
+name: Refresh Vigil feeds
+
+# Fetches every data source from a server (not the browser) and commits the
+# results to public/data/*.json. Each data commit redeploys winder.works/vigil
+# on Vercel. Every 30 minutes keeps us well under Vercel's daily deploy limit;
+# GitHub runs scheduled jobs later than asked anyway.
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: vigil-feeds
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch feeds
+        run: node scripts/fetch-feeds.mjs
+
+      - name: Commit if changed
+        run: |
+          git config user.name "vigil-bot"
+          git config user.email "vigil-bot@users.noreply.github.com"
+          git add public/data
+          if git diff --staged --quiet; then
+            echo "No change."
+          else
+            git commit -m "feeds: refresh $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push
+          fi
