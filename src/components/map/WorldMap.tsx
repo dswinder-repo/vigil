@@ -564,7 +564,17 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
     map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
     mapRef.current = map;
 
+    // MapLibre sizes its canvas when it is created and ignores the first
+    // resize notice after that. If the layout settles in between (panels
+    // filling in, the window opening), the canvas stays at its first size and
+    // the map shows blank. Follow the container ourselves.
+    const container = containerRef.current;
+    const resizeObserver = new ResizeObserver(() => map.resize());
+    resizeObserver.observe(container);
+    map.once('load', () => map.resize());
+
     return () => {
+      resizeObserver.disconnect();
       try {
         readyRef.current = false;
         setMapReady(false);
