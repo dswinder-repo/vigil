@@ -940,6 +940,7 @@ async function hotspotContext() {
   for (const h of active) for (const iso of h.iso3s) hotIso.set(iso, Math.max(hotIso.get(iso) ?? 0, h.intensity ?? 2));
   return {
     geo,
+    watch,
     curated,
     previous,
     active,
@@ -1046,6 +1047,18 @@ async function buildHotspots(ctx, worldItems) {
         error: `${h.status}: ${h.pins48h} events in 48h`,
       });
     }
+  }
+  // CrisisWatch's feed is sometimes refused to GitHub's servers; the last good
+  // copy is kept, and this says so once it is more than a month old.
+  const cw = ctx.watch?.crisiswatch;
+  const cwAge = cw?.parsedAt ? (Date.now() - new Date(cw.parsedAt).getTime()) / 86_400_000 : Infinity;
+  if (cwAge > 40) {
+    status.push({
+      source: 'coverage: CrisisWatch watchlist',
+      group: 'coverage',
+      ok: false,
+      error: cw?.parsedAt ? `last read ${cw.parsedAt.slice(0, 10)}${cw.error ? ` (${cw.error})` : ''}` : `never read${cw?.error ? ` (${cw.error})` : ''}`,
+    });
   }
   const reviewedAge = (Date.now() - new Date(HOTSPOTS.reviewed).getTime()) / 86_400_000;
   if (!(reviewedAge <= REVIEW_STALE_DAYS)) {

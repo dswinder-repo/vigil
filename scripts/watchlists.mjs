@@ -94,7 +94,7 @@ export async function refreshWatchlists({ get, previous, isoOf, log = console.lo
       for (const k of ['alerts', 'deteriorated', 'improved']) {
         cw[k] = cw[k].map((slug) => ({ slug, iso3: resolve(slug) })).filter((x) => x.iso3);
       }
-      out.crisiswatch = { fetchedAt: new Date().toISOString(), ...cw };
+      out.crisiswatch = { fetchedAt: new Date().toISOString(), parsedAt: new Date().toISOString(), ...cw };
       log(`  watchlists: CrisisWatch "${cw.title}"`);
     } catch (err) {
       // The monthly item drops off the 10-item feed after a while; keep it.
