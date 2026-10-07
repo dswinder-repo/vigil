@@ -184,7 +184,7 @@ const CATEGORIES = [
   ['disaster', /\b(earthquakes?|tsunami|hurricanes?|(?:tropical |winter )?storms?|tropical depression|floods?|flooding|wildfires?|eruption|tornado(es)?|cyclones?|typhoons?|landslides?|mudslides?|heatwave|drought|blizzard|extreme weather)\b/i],
   ['humanitarian', /\b(famine|starvation|starving|displac\w*|refugees?|genocide|atrocit\w*|malnutrition|aid convoy|civilian casualties|war crimes|humanitarian|ethnic cleansing|massacre)\b/i],
   ['unrest', /\b(riots?|rioters?|rioting|coup|uprising|crackdown|insurrection|looting|mutiny|junta|martial law|state of emergency|curfew|protests?|protesters?|protestors?|demonstrat(ors?|ions?)|tear gas|rubber bullets|water cannon|general strike|nationwide strike|strikers|walkout|unrest|clashes? with police|police (?:fire|shoot|kill|clash)\w*|(?:arrests?|detains?|detained|jail(?:s|ed)?) (?:of )?(?:dozens|hundreds|protesters|activists|opposition|journalists|critics)|opposition leader|disputed election|election (?:violence|fraud|dispute|protests?)|vote rigging|lynch\w*|mob)\b/i],
-  ['conflict', /\b(wars?|wartime|warfare|air ?strikes?|strikes? on|struck|shelling|shelled|bombard\w*|bomb(?:s|ing|ings|ed)?|counteroffensive|invasion|invad\w*|ceasefire|truce|artillery|drones?|missiles?|rockets?|mortars?|ballistic|intercept\w*|shot down|warships?|aircraft carriers?|carrier strike group|destroyers?|submarines?|torpedo\w*|sinks?|sank|navy|naval|troops?|soldiers?|army|military|militar\w*|marines|warhead|militants?|militias?|insurgen\w*|jihadis\w*|rebels?|gunmen|fighters|ambush\w*|raids?|attacks?|attacked|assault|retaliat\w*|escalat\w*|hostages?|kidnap\w*|abduct\w*|killed|kills|explosions?|blasts?|IED|suicide bomb\w*|fighting|offensive|front ?line|occupied|annex\w*|incursion|skirmish\w*|firefight|casualties|death toll|clashes?)\b/i],
+  ['conflict', /\b(wars?|wartime|warfare|air ?strikes?|strikes? on|struck|shelling|shelled|bombard\w*|bomb(?:s|ing|ings|ed)?|counteroffensive|invasion|invad\w*|ceasefire|truce|artillery|drones?|missiles?|rockets?|mortars?|ballistic|intercept\w*|shot down|warships?|aircraft carriers?|carrier strike group|destroyers?|submarines?|torpedo\w*|sinks?|sank|navy|naval|troops?|soldiers?|army|military|militar\w*|marines|warhead|militants?|militias?|insurgen\w*|jihadis\w*|rebels?|gunmen|fighters|ambush\w*|raids?|attacks?|attacked|assault|retaliat\w*|escalat\w*|hostages?|kidnap\w*|abduct\w*|killed|kills|kill|killing|strikes|dead|wounded|injur\w*|gunfire|shooting|shot|explosions?|blasts?|IED|suicide bomb\w*|fighting|offensive|front ?line|occupied|annex\w*|incursion|skirmish\w*|firefight|casualties|death toll|clashes?)\b/i],
   ['political', /\b(sanctions?|impeach\w*|assassinat\w*|referendum|peace (?:treaty|talks|deal|plan)|talks|negotiat\w*|envoy|delegation|diplomat\w*|embargo|trade war|tariffs?|export controls|arms deal|expel\w*|ambassador|severs? ties|security council|nuclear (?:deal|program|programme|talks)|enrichment|government collapse|no-confidence|snap election|martial)\b/i],
 ];
 
@@ -214,6 +214,9 @@ const WAR_KINDS = new Set(['war', 'insurgency', 'flashpoint', 'humanitarian']);
  * it is about the hotspot even when its wording does not say what happened.
  */
 export function classify(title, hotspot = null, { viaSearch = false } = {}) {
+  // Anniversaries, memorials and "on this day" pieces look back; they are not
+  // events happening now and stay off the map.
+  if (RETROSPECTIVE.test(title)) return null;
   let cat = null;
   for (const [c, re] of CATEGORIES) {
     if (re.test(title)) {
@@ -233,14 +236,137 @@ export function classify(title, hotspot = null, { viaSearch = false } = {}) {
   return null;
 }
 
+/** Looking back, not happening now: "UN event marking three years since the massacre". */
+const RETROSPECTIVE =
+  /\b(anniversary|years since|years after|years on|years ago|marks? (?:\w+ )?years|memorial|commemorat\w*|remembrance|remembering|tribute|in memory|vigil for|on this day|this day in history|history of)\b/i;
+
+/** "kills 18", "18 killed", "death toll rises to 40", "dozens killed". */
+function casualties(title) {
+  const t = title.replace(/,(\d{3})/g, '$1');
+  const n =
+    t.match(/\b(\d+)\s+(?:\w+\s+){0,3}(?:killed|dead|deaths|died|slain|massacred)\b/i)?.[1] ??
+    t.match(/\b(?:kills?|killing|killed|death toll (?:rises to|reaches|of|at)|at least)\s+(?:at least\s+)?(\d+)\b/i)?.[1];
+  if (n) return Number(n);
+  if (/\b(dozens|scores|hundreds|thousands)\s+(?:of\s+\w+\s+)?(?:killed|dead)\b/i.test(t)) return 30;
+  return 0;
+}
+
 export function severityOf(title, hotspot = null) {
   const t = title.toLowerCase();
+  if (RETROSPECTIVE.test(title)) return 1;
   let s = 2;
-  if (/massacre|genocide|nuclear (test|strike|attack)|invasion|coup|mass casualt|famine/.test(t)) s = 5;
+  if (/massacre|nuclear (test|strike|attack)|invasion|coup|mass casualt|famine/.test(t)) s = 5;
   else if (/air ?strike|bombard|offensive|killed|kills|dead|missile|torpedo|sinks|atrocit|shot dead|war\b/.test(t)) s = 4;
   else if (/clash|attack|strike|sanction|crackdown|outbreak|ransomware|militant|riot|protest|curfew|emergency/.test(t)) s = 3;
+  const dead = casualties(title);
+  if (dead >= 10) s = 5;
+  else if (dead >= 3) s = Math.max(s, 4);
   if (hotspot?.intensity >= 4) s = Math.max(s, 3);
   return s;
+}
+
+/** Seats of government that stand for their country when naming who is involved. */
+const VENUE_COUNTRY = { pentagon: 'USA', 'white house': 'USA', washington: 'USA', kremlin: 'RUS' };
+
+/**
+ * Every country a text names. By default: names, demonyms, capitals, cities,
+ * seats of government, and "US" in capitals (lower-case "us" is a pronoun,
+ * so it is not in the gazetteer). `countriesOnly` counts country names and
+ * demonyms alone, so "Florida" or "Chattanooga" is not a country mention.
+ */
+export function countriesIn(geo, text, { countriesOnly = false } = {}) {
+  const t = String(text);
+  const out = new Set();
+  for (const m of t.matchAll(geo.regex)) {
+    const key = m[1].toLowerCase();
+    const e = geo.entries.get(key);
+    if (!e) continue;
+    if (countriesOnly && e.kind !== 'country') continue;
+    if (e.iso3) out.add(e.iso3);
+    else if (!countriesOnly && VENUE_COUNTRY[key]) out.add(VENUE_COUNTRY[key]);
+  }
+  if (/\bU\.?S\.?(?![a-z])/.test(t)) out.add('USA');
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// global tension index
+// ---------------------------------------------------------------------------
+
+/**
+ * One number for "how dangerous is the world right now", 0-100.
+ *
+ * It used to average the most alarming headlines, so any day with a dozen
+ * war reports scored 100 ("DEFCON 1"), and adding news sources raised it.
+ * It now rates situations, not headlines: each country's most serious active
+ * hotspot counts once, weighted steeply by intensity (one major war counts
+ * for fifteen simmering disputes), more when a nuclear-armed state is a
+ * direct party to a war. A saturating curve turns the total into 0-100.
+ *
+ * Calibration (K = 100): a calm world (one major war, a handful of serious
+ * conflicts) reads about 30, GUARDED; a typical recent year such as 2019
+ * about 53, ELEVATED; October 2026 about 66-70, HIGH. SEVERE (80+) is
+ * reserved for direct war between nuclear-armed states or nuclear use, which
+ * only a curated hotspot flag (`nuclearPowersInDirectConflict`) can signal;
+ * without it the score stops at 79.
+ */
+const INTENSITY_WEIGHT = { 5: 6, 4: 3, 3: 1.2, 2: 0.4, 1: 0.1 };
+const NUCLEAR_STATES = new Set(['USA', 'RUS', 'CHN', 'GBR', 'FRA', 'IND', 'PAK', 'ISR', 'PRK']);
+const TENSION_K = 100;
+
+export const TENSION_BANDS = [
+  [80, 'SEVERE'],
+  [60, 'HIGH'],
+  [40, 'ELEVATED'],
+  [20, 'GUARDED'],
+  [0, 'LOW'],
+];
+
+export function tensionIndex({ hotspots, curated, history, now = Date.now() }) {
+  const byId = new Map(curated.map((h) => [h.id, h]));
+  const perCountry = new Map();
+  let nuclearWar = false;
+  for (const h of hotspots) {
+    const src = byId.get(h.id);
+    const involved = new Set([...(h.countries ?? []), ...((src?.involvedIso3s) ?? [])]);
+    const major = ['war', 'insurgency'].includes(h.kind) && h.intensity >= 4 &&
+      [...involved].some((c) => NUCLEAR_STATES.has(c));
+    if (src?.nuclearPowersInDirectConflict) nuclearWar = true;
+    let w = (INTENSITY_WEIGHT[h.intensity] ?? 0) * (major ? 1.5 : 1);
+    // A country listed only because an outside list names it in a regional
+    // conflict counts half: Belize is on Wikipedia's Mexican drug war row.
+    if (h.source === 'watchlist') w *= 0.5;
+    const key = h.countries?.[0] ?? h.id;
+    const prev = perCountry.get(key);
+    if (!prev || w > prev.w) perCountry.set(key, { w, h });
+  }
+  const total = [...perCountry.values()].reduce((s, x) => s + x.w, 0);
+  let score = Math.round(100 * (1 - Math.exp(-total / TENSION_K)));
+  if (!nuclearWar) score = Math.min(79, score);
+  const level = TENSION_BANDS.find(([min]) => score >= min)[1];
+
+  // Trend from the event history: the last two days against the month.
+  const days = Object.entries(history?.days ?? {});
+  let trend = 'new';
+  if (days.length >= 7) {
+    const today = new Date(now).toISOString().slice(0, 10);
+    const yesterday = new Date(now - 86_400_000).toISOString().slice(0, 10);
+    let recent = 0, base = 0, baseDays = 0;
+    for (const [d, bucket] of days) {
+      const n = Object.values(bucket).reduce((s, l) => s + l.length, 0);
+      if (d === today || d === yesterday) recent += n;
+      else { base += n; baseDays++; }
+    }
+    const r = recent / 2, b = base / Math.max(1, baseDays);
+    trend = r > b * 1.25 ? 'rising' : r < b * 0.8 ? 'falling' : 'steady';
+  }
+
+  const contributors = [...perCountry.values()]
+    .sort((a, b) => b.w - a.w)
+    .slice(0, 8)
+    .map(({ h }) => ({ id: h.id, name: h.name, intensity: h.intensity }));
+
+  return { score, level, trend, situations: perCountry.size, contributors };
 }
 
 // ---------------------------------------------------------------------------
@@ -376,8 +502,13 @@ function dominantKind(items, iso) {
 
 /** Curated list → runtime shape: country names resolved to ISO codes. */
 export function prepareCurated(geo, list) {
+  const iso = (c) => isoOf(geo.nameToIso, c);
   return list
-    .map((h) => ({ ...h, iso3s: (h.countries ?? []).map((c) => isoOf(geo.nameToIso, c)).filter(Boolean) }))
+    .map((h) => ({
+      ...h,
+      iso3s: (h.countries ?? []).map(iso).filter(Boolean),
+      involvedIso3s: (h.involved ?? []).map(iso).filter(Boolean),
+    }))
     .filter((h) => h.iso3s.length);
 }
 

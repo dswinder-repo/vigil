@@ -21,14 +21,14 @@ function scoreTextColor(score: number): string {
 }
 
 function scoreDescription(score: number): string {
-  if (score <= 20) return 'low — barely in the news cycle';
-  if (score <= 50) return 'moderate — steady coverage';
-  if (score <= 75) return 'elevated — heavy coverage';
-  return 'critical — saturating the news cycle';
+  if (score <= 20) return 'low — little or no conflict reported between them';
+  if (score <= 50) return 'moderate — some hostile incidents or confrontation';
+  if (score <= 75) return 'high — repeated violent incidents';
+  return 'severe — sustained war-level reporting';
 }
 
 function sourceUrl(a: string, b: string): string {
-  const query = encodeURIComponent(`${a} ${b} when:1d`);
+  const query = encodeURIComponent(`${a} ${b} when:2d`);
   return `https://news.google.com/search?q=${query}&hl=en-US&gl=US&ceid=US:en`;
 }
 
@@ -62,19 +62,19 @@ function ThreatDetail({ pair }: { pair: ThreatPair }) {
     <div className="border-l-2 border-green-700 bg-gray-900/70 mx-3 mb-1 px-3 py-2 font-mono text-[11px] text-gray-400 animate-fadeIn space-y-2">
       {/* Summary sentence */}
       <p className="text-gray-300 leading-relaxed">
-        How much coverage{' '}
-        <span className="text-white">{pair.a}–{pair.b}</span> drew in the last 24 hours,
-        relative to the busiest pair on the board.
-        This is attention, not intent: a spike means the story is moving, and it is a
-        prompt to go read, not a verdict on what is happening.
+        How much serious conflict news named both{' '}
+        <span className="text-white">{pair.a}</span> and <span className="text-white">{pair.b}</span>{' '}
+        in the last 48 hours, weighted by severity: a deadly strike counts far more than talks
+        or a statement. The scale is fixed, not relative to other pairs, so a quiet pair reads low
+        even on a busy news day.
       </p>
 
       {/* Signal intensity */}
       <div>
-        <span className="text-gray-600 uppercase tracking-widest text-[9px]">Coverage Volume</span>
+        <span className="text-gray-600 uppercase tracking-widest text-[9px]">Events</span>
         <p className="mt-0.5">
-          <span className="text-green-400">{pair.articles}</span> distinct stories in the
-          last 24 hours, measured against the busiest pair on the board. Score{' '}
+          <span className="text-green-400">{pair.articles}</span> events naming both countries in
+          the last 48 hours. Score{' '}
           <span className={scoreTextColor(pair.score)}>{pair.score}</span> ={' '}
           <span className="text-gray-300">{desc}</span>.
           {pair.stale && (
@@ -159,9 +159,9 @@ function ThreatRow({
           />
         </div>
 
-        {/* Numeric score */}
-        <span className={`w-6 shrink-0 tabular-nums text-right ${textCol}`}>
-          {pair.articles}
+        {/* Numeric score (the event count is in the expanded detail) */}
+        <span className={`w-6 shrink-0 tabular-nums text-right ${textCol}`} title={`${pair.articles} events naming both, last 48h`}>
+          {pair.score}
         </span>
 
         {/* Trend arrow */}
@@ -215,8 +215,8 @@ export function ThreatPanel() {
       <div className="flex items-center gap-2 px-3 py-1 border-b border-gray-800 font-mono text-[8px] uppercase tracking-widest text-gray-600 sticky top-0 bg-bg-panel-1 z-10">
         <span className="w-4 shrink-0">#</span>
         <span className="w-36 shrink-0">Pair</span>
-        <span className="flex-1" title="Attention relative to the busiest pair on the board. 100 = the pair drawing the most coverage right now.">Volume</span>
-        <span className="w-6 text-right" title="Distinct stories about this pair in the last 24 hours. Syndicated copies of one story count once.">Stories</span>
+        <span className="flex-1" title="Severity-weighted conflict events naming both countries, last 48 hours. Fixed scale: 100 = sustained war-level reporting.">Tension</span>
+        <span className="w-6 text-right" title="Tension score, 0-100. 100 = sustained war-level reporting.">Score</span>
         <span className="w-3 text-center" title="Change since the previous reading: ↑ Rising · ↓ Falling · → Steady">Trend</span>
         <span className="w-3 shrink-0" />
       </div>

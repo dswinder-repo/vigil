@@ -79,9 +79,7 @@ export const API_NOAA_SPACE_WEATHER = 'https://services.swpc.noaa.gov/products/a
 
 // --- Market endpoints ---
 export const API_COINGECKO = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,dogecoin&vs_currencies=usd&include_24hr_change=true';
-export const API_MANIFOLD = SNAP + 'manifold.json';
 export const API_POLYMARKET = SNAP + 'polymarket.json';
-export const API_KALSHI = SNAP + 'kalshi.json';
 
 // --- RSS News feeds (fetched via CORS proxy) ---
 export const RSS_FEEDS = [
@@ -174,9 +172,7 @@ export const POLL_GDELT = 900_000;
 export const POLL_RELIEFWEB = 300_000;
 export const POLL_NWS = 120_000;
 export const POLL_COINGECKO = 60_000;
-export const POLL_MANIFOLD = 120_000;
 export const POLL_POLYMARKET = 120_000;
-export const POLL_KALSHI = 5 * 60 * 1000; // 5 minutes
 export const POLL_OSINT = 300_000;
 export const POLL_NEWS = 300_000;
 export const POLL_GLOBAL_MARKETS = 60_000;

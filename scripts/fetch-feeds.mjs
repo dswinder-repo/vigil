@@ -19,7 +19,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  loadGeo, locate, spread, classify, severityOf, isoOf,
+  loadGeo, locate, spread, classify, severityOf, isoOf, countriesIn, tensionIndex,
   trackHotspots, prepareCurated, keywordIndex, newsSearchUrl,
 } from './world.mjs';
 import { refreshWatchlists, watchByCountry } from './watchlists.mjs';
@@ -239,8 +239,8 @@ const WORLD_NOISE = [
   /^(how|why|what|who|when|where|is|are|can|could|should|would|will|does|do|did|has|have)\b.*\?\s*$/i,
   /\b(tail risk|thought experiment|hypothetical|what if|imagine if|here's why|here is why|the case for|the case against|ranked|explained)\b/i,
   /\b(concert|album|singer|rapper|actor|actress|celebrity|hollywood|box office|netflix|grammy|oscar|red carpet)\b/i,
-  /\b(football|soccer|cricket|basketball|baseball|hockey|tennis|golf|olympic|world cup|premier league|transfer window|playoffs?)\b/i,
-  /\b(NFL|NBA|NCAA|MLB|NHL|quarterback|touchdown|halftime|season opener|matchup|head coach|starting lineup|draft pick|bowl game|Georgia Tech|Notre Dame)\b/,
+  /\b(football|soccer|cricket|basketball|baseball|hockey|tennis|golf|olympic|world cup|premier league|transfer window|playoffs?|stadium|homecoming|tailgate|kickoff|quarterbacks?|player of the (?:week|month|year)|rookie of the|draft picks?|free agen\w*)\b/i,
+  /\b(NFL|NBA|NCAA|MLB|NHL|NFC|AFC|MVP|quarterback|touchdown|halftime|season opener|matchup|head coach|starting lineup|draft pick|bowl game|Georgia Tech|Notre Dame)\b/,
   /\b(seeks|sparks?|boosts?) \w+ (?:spark|offense|defense)\b/i,
   // Team names that cannot mean anything else ("Cowboys offensive plan" read
   // as war). Not Patriots, Jets, Eagles, Giants, Cardinals and the like: in
@@ -248,13 +248,17 @@ const WORLD_NOISE = [
   /\b(Cowboys|Buccaneers|Steelers|Packers|Bengals|Jaguars|Broncos|Seahawks|49ers|Lakers|Celtics|Knicks|Yankees|Dodgers|Red Sox|Mets)\b/,
   // Football competitions and squads that read as attacks ("attack first").
   /\b(Champions League|Premier League|MTN8|Bafana|Asian Games)\b/,
+  // News digests ("Gaza toll passes 74,000; US trade deficit tops $100bn; ...")
+  // are several stories in one line and file under whichever matches first.
+  /;[^;]+;/,
+  /^headlines for\b/i,
   /\b(recipe|restaurant|product recall|food recall|vehicle recall|lawsuit filed|class action|sued after|dealership|horoscope|lottery)\b/i,
   /\b(back to school|parenting|dating|weight loss|skincare|black friday|discount code|coupon)\b/i,
   /\b(stock (?:jumps|falls|rises)|earnings call|quarterly results|share price|IPO|dividend)\b/i,
 ];
 
 const NOISE_PUBLISHERS =
-  /\b(heavy\.com|espn|sb ?nation|blogging the boys|bucs nation|pff|pro football|nfl\.com|on3|247sports|rivals|fansided|bleacher ?report|sports illustrated|si\.com|cbs ?sports|fox ?sports|the athletic|yahoo sports|sportskeeda|tmz|people\.com|us weekly|e! news|variety|hollywood reporter|deadline|pagesix|page six)\b/i;
+  /\b(athletics|sports?|heavy\.com|espn|sb ?nation|blogging the boys|bucs nation|pff|pro football|nfl\.com|on3|247sports|rivals|fansided|bleacher ?report|sports illustrated|si\.com|cbs ?sports|fox ?sports|the athletic|yahoo sports|sportskeeda|tmz|people\.com|us weekly|e! news|variety|hollywood reporter|deadline|pagesix|page six)\b/i;
 
 /**
  * Fetch a set of RSS/Atom feeds into one merged, de-duplicated file.
@@ -515,56 +519,52 @@ async function buildMarkets() {
  * that could not be measured is left out of the file entirely, so the panel
  * never shows an invented zero.
  */
-async function buildBilateral() {
+/**
+ * Rivalry tension: how much serious conflict news names both countries of a
+ * pair in the last 48 hours, weighted by severity.
+ *
+ * This used to count Google News articles per pair and scale them against the
+ * busiest pair. Every busy pair hit Google's result cap, so Azerbaijan and
+ * Armenia, mid-peace-deal, scored 98 next to a shooting war at 98. It now
+ * reads the same placed, categorised events the map shows, and the scale is
+ * fixed rather than relative: 100 means sustained war-level reporting.
+ */
+const SEVERITY_WEIGHT = { 1: 0.5, 2: 1, 3: 2, 4: 4, 5: 8 };
+
+async function buildRivalries(worldItems) {
   const file = 'bilateral.json';
+  const geo = worldGeo();
   const pairs = CONFIG.bilateral ?? [];
   const prev = await readPrevious(file);
-  const prevCounts = Object.fromEntries((prev?.items ?? []).map((p) => [p.id, p.articles]));
+  const prevScore = Object.fromEntries((prev?.items ?? []).map((p) => [p.id, p.score]));
+  const cutoff = Date.now() - 48 * 3_600_000;
+  const recent = worldItems
+    .filter((i) => new Date(i.timestamp).getTime() >= cutoff && i.category !== 'disaster' && i.category !== 'disease')
+    .map((i) => ({ ...i, named: countriesIn(geo, i.title) }));
 
-  const measured = await pool(pairs, async (p) => {
-    try {
-      const xml = await get(
-        `https://news.google.com/rss/search?q=${encodeURIComponent(p.q)}+when:1d&hl=en-US&gl=US&ceid=US:en`,
-      );
-      // Count distinct stories. Wire copy syndicated to thirty outlets is one
-      // event, and counting it thirty times made quiet pairs look like crises.
-      const items = dedupe(
-        parseFeed(xml, p.id).map((i) => cleanGoogleTitle(i, { keepSource: false })),
-        0.55,
-      );
-      status.push({ source: `pair:${p.id}`, group: file, ok: true, count: items.length });
-      return { id: p.id, a: p.a, b: p.b, articles: items.length };
-    } catch (err) {
-      status.push({
-        source: `pair:${p.id}`,
-        group: file,
-        ok: false,
-        error: String(err.message || err).slice(0, 120),
-      });
-      // Carry the last good reading rather than reporting a false zero.
-      const last = (prev?.items ?? []).find((x) => x.id === p.id);
-      return last ? { ...last, stale: true } : null;
-    }
-  });
-
-  const peak = Math.max(1, ...measured.filter(Boolean).map((p) => p.articles));
-  const items = measured
-    .filter(Boolean)
+  const items = pairs
     .map((p) => {
-      const before = prevCounts[p.id];
+      const a = isoOf(geo.nameToIso, p.a);
+      const b = isoOf(geo.nameToIso, p.b);
+      if (!a || !b) return null;
+      const hits = recent.filter((i) => i.named.has(a) && i.named.has(b));
+      const weight = hits.reduce((s, i) => s + (SEVERITY_WEIGHT[i.severity] ?? 1), 0);
+      const score = Math.round(100 * (1 - Math.exp(-weight / 60)));
+      const before = prevScore[p.id];
       let trend = 'stable';
-      if (typeof before === 'number' && before > 0) {
-        if (p.articles > before * 1.15) trend = 'up';
-        else if (p.articles < before * 0.85) trend = 'down';
+      if (typeof before === 'number') {
+        if (score > before + 5) trend = 'up';
+        else if (score < before - 5) trend = 'down';
       }
-      return { ...p, score: Math.round((p.articles / peak) * 100), trend };
+      return { id: p.id, a: p.a, b: p.b, articles: hits.length, score, trend };
     })
-    .sort((a, b) => b.score - a.score);
+    .filter(Boolean)
+    .sort((x, y) => y.score - x.score);
 
   await writeJson(file, {
     fetchedAt: new Date().toISOString(),
-    failed: items.length === 0,
-    sourcesOk: items.filter((i) => !i.stale).length,
+    failed: false,
+    sourcesOk: items.length,
     sourcesTotal: pairs.length,
     items,
   });
@@ -589,9 +589,36 @@ async function buildBilateral() {
  * which the dashboard shows the last thirty days. Trimming to what is actually
  * read keeps years of history from piling up in git for no benefit.
  */
+/**
+ * Prediction markets by trading volume are mostly tennis, esports, crypto
+ * price bets and celebrity tweets. Vigil shows only questions about the
+ * world: wars, governments, elections, sanctions, economies, named countries.
+ */
+const MARKET_NOISE =
+  /\b(vs\.?|v\.|match|game \d|tournament|masters|open:|league|cup|nfl|nba|mlb|nhl|ufc|f1|grand prix|counter-strike|esports|valorant|dota|map \d|o\/u|over \d|under \d|goals?|points?|touchdowns?|yards|bitcoin|btc|ethereum|eth|solana|crypto|token|memecoin|up or down|tweets?|tiktok|youtube|album|song|movie|box office|oscars?|grammys?|emmys?|eurovision|bachelor|taylor swift|kardashian|temperature|weather in|highest temp|rain in|win on \d{4}-\d{2}-\d{2}|governor|mayor\w*|city council|state senate|by-election|senate (?:election|race)|house race|primary)\b/i;
+const MARKET_WORLD =
+  /\b(war|ceasefire|truce|invade|invasion|strikes?|attack|nuclear|missile|sanctions?|tariffs?|blockade|regime|coup|president|prime minister|chancellor|supreme leader|parliament|nato|united nations|treaty|peace|troops|military|hostages?|annex|border|embargo|oil|opec|recession|inflation|default|out as|resign|impeach|independence|reunification)\b/i;
+
+function isWorldQuestion(q) {
+  // Multi-leg sports parlays read "yes Dortmund, yes Arsenal, ...".
+  if (!q || /^(yes|no) /i.test(q) || MARKET_NOISE.test(q)) return false;
+  return MARKET_WORLD.test(q) || countriesIn(worldGeo(), q, { countriesOnly: true }).size > 0;
+}
+
 function trimSnapshot(body, trim) {
   if (!trim) return body;
   try {
+    if (trim.worldField) {
+      const data = JSON.parse(body);
+      const arr = trim.path ? data?.[trim.path] : data;
+      if (!Array.isArray(arr)) return body;
+      const kept = arr.filter((m) => isWorldQuestion(String(m?.[trim.worldField] ?? ''))).slice(0, trim.keep ?? 40);
+      if (trim.path) {
+        data[trim.path] = kept;
+        return JSON.stringify(data);
+      }
+      return JSON.stringify(kept);
+    }
     if (trim.csvTop) {
       // CSV: drop low-confidence rows, keep the strongest N by one column.
       const lines = body.trim().split('\n');
@@ -830,6 +857,7 @@ async function buildGdelt() {
 const WORLD_WINDOW_MS = 48 * 3_600_000;
 const WORLD_CAP = 1200;
 const WORLD_PER_COUNTRY = 90;
+const CAP_BY_INTENSITY = { 5: 90, 4: 60, 3: 35, 2: 20, 1: 15, 0: 20 };
 
 async function buildWorld(ctx) {
   const file = 'world.json';
@@ -903,21 +931,25 @@ async function buildWorld(ctx) {
     const hotspot = (item.hotspot && byId.get(item.hotspot)) || null;
     const category = classify(item.title, hotspot, { viaSearch: item.via === 'search' });
     if (!category) continue;
-    collected.push({ ...item, category, stale: undefined });
+    collected.push({ ...item, category, severity: severityOf(item.title, hotspot), stale: undefined });
   }
 
   // Newest first, one row per story, and no single country taking more than
   // its share: a war that fills every feed should not push the rest of the
   // world off the map.
   const perCountry = new Map();
-  const items = dedupe(
-    collected.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)),
+  const items = sameEvent(
+    dedupe(collected.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))),
   )
     .filter((i) => {
       const k = i.iso3 ?? i.place;
       const n = (perCountry.get(k) ?? 0) + 1;
       perCountry.set(k, n);
-      return n <= WORLD_PER_COUNTRY;
+      // A country's share follows how serious its situation is, not how much
+      // press it gets: a protest movement covered by a large national press
+      // should not outweigh a war on the map.
+      const cap = i.iso3 ? CAP_BY_INTENSITY[hotIso.get(i.iso3) ?? 0] : WORLD_PER_COUNTRY;
+      return n <= cap;
     })
     .slice(0, WORLD_CAP);
 
@@ -942,6 +974,39 @@ async function buildWorld(ctx) {
   return items;
 }
 
+/**
+ * Five outlets on one Russian strike write five different headlines, and the
+ * general de-duplication (shared wording) let all five through as separate
+ * events. Within one country, one category and twelve hours, two stories are
+ * the same event when they share most of their key words, or report the same
+ * death toll. The most severe, then newest, version is kept.
+ */
+function sameEvent(items) {
+  const kept = [];
+  const deadOf = (t) => t.replace(/,(\d{3})/g, '$1').match(/\b(\d{2,})\b(?=\D{0,40}\b(?:killed|dead|deaths|died))|(?:kill(?:s|ed|ing)?|toll[^\d]{0,20})\s+(?:at least\s+)?(\d{2,})/i);
+  const sorted = [...items].sort((a, b) => b.severity - a.severity || new Date(b.timestamp) - new Date(a.timestamp));
+  for (const it of sorted) {
+    const fp = fingerprint(it.title);
+    const dm = deadOf(it.title);
+    const dead = dm ? dm[1] ?? dm[2] : null;
+    const t = new Date(it.timestamp).getTime();
+    const dupe = kept.some((k) => {
+      if (k.iso3 !== it.iso3 || k.category !== it.category || !it.iso3) return false;
+      if (Math.abs(k.t - t) > 12 * 3_600_000) return false;
+      if (overlap(fp, k.fp) >= 0.45 || (dead && dead === k.dead)) return true;
+      // A mass-casualty attack is reported with a rising toll (14, 19, 24,
+      // 28 dead) as it is counted; two such reports from one country within
+      // eight hours are the same attack.
+      return it.category === 'conflict' && Number(dead) >= 10 && Number(k.dead) >= 10 &&
+        Math.abs(k.t - t) <= 8 * 3_600_000;
+    });
+    if (!dupe) kept.push({ ...it, fp, dead, t });
+  }
+  return kept
+    .map(({ fp, dead, t, ...rest }) => rest)
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+}
+
 // ---------------------------------------------------------------------------
 // hotspots — the curated list plus whatever is surging, and their searches
 // ---------------------------------------------------------------------------
@@ -950,8 +1015,13 @@ const HOTSPOTS = JSON.parse(await readFile(path.join(HERE, 'hotspots.json'), 'ut
 const MAX_SEARCHES = 160;
 const REVIEW_STALE_DAYS = 45;
 
+function worldGeo() {
+  worldGeo.cache ??= loadGeo(HERE, HOTSPOTS.hotspots);
+  return worldGeo.cache;
+}
+
 async function hotspotContext() {
-  const geo = loadGeo(HERE, HOTSPOTS.hotspots);
+  const geo = worldGeo();
   const curatedOnly = prepareCurated(geo, HOTSPOTS.hotspots);
   const watch = await refreshWatchlists({
     get: (u) => get(u, { retries: 1, timeoutMs: 30_000 }),
@@ -1104,11 +1174,14 @@ async function buildHotspots(ctx, worldItems) {
   }
 
   await writeFile(path.join(OUT, 'hotspot-history.json'), JSON.stringify(nextHistory));
+  const index = tensionIndex({ hotspots, curated: ctx.curated, history: nextHistory });
   await writeJson('hotspots.json', {
     fetchedAt: new Date().toISOString(),
     reviewed: HOTSPOTS.reviewed,
+    index,
     items: hotspots,
   });
+  console.log(`  tension: ${index.score} ${index.level} (${index.situations} situations, trend ${index.trend})`);
   const auto = hotspots.filter((h) => h.auto).map((h) => h.name);
   const thin = hotspots.filter((h) => h.status !== 'covered' && !h.auto).map((h) => `${h.name} (${h.pins48h})`);
   console.log(`  hotspots: ${hotspots.length} tracked; automatic: ${auto.join(', ') || 'none'}`);
@@ -1123,7 +1196,6 @@ await buildFeedFile({ file: 'news.json', sources: CONFIG.news, cap: 120 });
 await buildFeedFile({ file: 'osint.json', sources: CONFIG.osint, cap: 150 });
 await buildMilitary();
 await buildMarkets();
-await buildBilateral();
 await buildSnapshots();
 await buildGdelt();
 await buildFeedFile({ file: 'regional.json', sources: CONFIG.regional ?? [], cap: 600 });
@@ -1131,6 +1203,7 @@ const ctx = await hotspotContext();
 await buildFeedFile({ file: 'signals.json', sources: searchSources(ctx.active), cap: 900, retries: 1 });
 const worldItems = await buildWorld(ctx);
 await buildHotspots(ctx, worldItems);
+await buildRivalries(worldItems);
 
 const ok = status.filter((s) => s.ok).length;
 await writeJson('status.json', {

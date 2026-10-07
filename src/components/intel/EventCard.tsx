@@ -48,7 +48,7 @@ export function EventCard({ event, isSelected, onClick }: EventCardProps) {
           ))}
         </div>
         <span className="font-mono text-[10px] uppercase text-text-muted">
-          {event.source}
+          {event.source === 'gdelt' ? 'news' : event.source}
         </span>
       </div>
     </button>

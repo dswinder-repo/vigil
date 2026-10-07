@@ -1,6 +1,4 @@
 import { usePolymarket } from '@/hooks/usePolymarket';
-import { useKalshi } from '@/hooks/useKalshi';
-import { useManifold } from '@/hooks/useManifold';
 import { ExternalLink } from 'lucide-react';
 
 type MarketItem = {
@@ -8,21 +6,17 @@ type MarketItem = {
   question: string;
   probability: number;
   url: string;
-  source: 'POLY' | 'KALSHI' | 'MANIFOLD';
+  source: 'POLY';
 };
 
 const SOURCE_COLORS: Record<string, string> = {
   POLY: '#7C3AED',
-  KALSHI: '#0EA5E9',
-  MANIFOLD: '#10B981',
 };
 
 export function PredictionsPanel() {
   const poly = usePolymarket();
-  const kalshi = useKalshi();
-  const manifold = useManifold();
 
-  const isLoading = poly.isLoading && kalshi.isLoading && manifold.isLoading;
+  const isLoading = poly.isLoading;
 
   if (isLoading) {
     return (
@@ -42,21 +36,11 @@ export function PredictionsPanel() {
       url: m.url,
       source: 'POLY' as const,
     })),
-    ...(kalshi.data ?? []).map((m) => ({
-      id: `kalshi-${m.id}`,
-      question: m.title,
-      probability: m.probability,
-      url: m.url,
-      source: 'KALSHI' as const,
-    })),
-    ...(manifold.data ?? []).map((m) => ({
-      id: `manifold-${m.id}`,
-      question: m.question,
-      probability: m.probability,
-      url: m.url,
-      source: 'MANIFOLD' as const,
-    })),
-  ].sort((a, b) => b.probability - a.probability);
+  ]
+    // A market at 1% or 99% is settled in all but name and says nothing about
+    // what might happen. The server already keeps only questions about the
+    // world and orders them by trading volume; keep that order.
+    .filter((m) => m.probability > 0.03 && m.probability < 0.97);
 
   if (markets.length === 0) {
     return (

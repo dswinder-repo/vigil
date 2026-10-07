@@ -5,7 +5,6 @@ import { CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/constants';
 import { useDashboardStore } from '@/stores/dashboard-store';
 import { CamerasPanel } from '@/components/panels/CamerasPanel';
 import { usePolymarket } from '@/hooks/usePolymarket';
-import { useManifold } from '@/hooks/useManifold';
 import { matchEventsToMarkets } from '@/lib/matchEventsToMarkets';
 import { useAIAnalysis } from '@/hooks/useAIAnalysis';
 import type { ReactNode } from 'react';
@@ -32,7 +31,6 @@ export function EventDetail() {
   // Reuse the same query keys that PredictionsPanel uses — React Query dedupes,
   // so these calls hit the shared cache and never trigger extra network requests.
   const { data: polyData } = usePolymarket();
-  const { data: manifoldData } = useManifold();
 
   // useAIAnalysis must be called unconditionally (Rules of Hooks), so we pass a
   // stub when no event is selected; the result is only rendered after the guard.
@@ -44,9 +42,9 @@ export function EventDetail() {
     return matchEventsToMarkets(
       event,
       polyData ?? [],
-      manifoldData ?? [],
+      [],
     );
-  }, [event, polyData, manifoldData]);
+  }, [event, polyData]);
 
   if (!event) return null;
 
@@ -61,7 +59,7 @@ export function EventDetail() {
             style={{ backgroundColor: color, boxShadow: `0 0 6px ${color}` }}
           />
           <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
-            {CATEGORY_LABELS[event.category]} // {event.source.toUpperCase()}
+            {CATEGORY_LABELS[event.category]} // {event.source === 'gdelt' ? 'NEWS' : event.source.toUpperCase()}
           </span>
         </div>
         <button

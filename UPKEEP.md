@@ -55,6 +55,16 @@ countries included. For each:
   add it to `scripts/hotspots.json` (same shape as the existing entries;
   `countries` are the core countries where it happens, `involved` the rest).
 
+The header's World Tension score is computed from this list
+(`tensionIndex()` in `scripts/world.mjs`). It cannot go above 79 unless a
+hotspot has `"nuclearPowersInDirectConflict": true`; set that only if
+nuclear-armed states are fighting each other directly, and remove it when
+they stop.
+
+Read the top 15 of the Intel Feed (highest `severity` then newest in
+`public/data/world.json`): they should be the most serious things happening
+now, with no duplicates of one event, no commentary, sport or anniversaries.
+
 Spot-check 30 random items in `public/data/world.json`: right place, right
 category, actually an event? Systematic mistakes are fixed in
 `scripts/geo/places.json`, `scripts/geo/countries.json` or the patterns in

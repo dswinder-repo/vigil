@@ -1,9 +1,20 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { Activity, Crosshair, ChevronDown } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { Activity, Crosshair, ChevronDown, TrendingUp, TrendingDown } from 'lucide-react';
 import { StatusLED } from '@/components/shared/StatusLED';
-import type { NormalizedEvent, Severity } from '@/lib/types';
+import { HOTSPOTS_URL, POLL_GDELT } from '@/lib/constants';
+import type { NormalizedEvent } from '@/lib/types';
 
-type ThreatLevel = 'DEFCON 1' | 'CRITICAL' | 'ELEVATED' | 'GUARDED' | 'NOMINAL';
+type TensionLevel = 'SEVERE' | 'HIGH' | 'ELEVATED' | 'GUARDED' | 'LOW';
+
+/** Computed by the feed job from the hotspot list; see scripts/world.mjs, tensionIndex(). */
+interface TensionIndex {
+  score: number;
+  level: TensionLevel;
+  trend: 'new' | 'rising' | 'steady' | 'falling';
+  situations: number;
+  contributors: Array<{ id: string; name: string; intensity: number }>;
+}
 
 const TIMEZONES: Array<{ label: string; tz: string }> = [
   { label: 'UTC', tz: 'UTC' },
@@ -65,7 +76,20 @@ export function HeaderBar({ sourceStatuses, events }: HeaderBarProps) {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const { level, score } = useMemo(() => computeThreatLevel(events), [events]);
+  // Same query key as the hotspots panel, so this is one request, not two.
+  const { data: hotspots } = useQuery<{ index?: TensionIndex }>({
+    queryKey: ['hotspots'],
+    queryFn: async () => {
+      const res = await fetch(HOTSPOTS_URL, { cache: 'no-cache' });
+      if (!res.ok) throw new Error(`hotspots.json: ${res.status}`);
+      return res.json();
+    },
+    refetchInterval: POLL_GDELT,
+    staleTime: 840_000,
+  });
+  const tension = hotspots?.index;
+  const level: TensionLevel = tension?.level ?? 'GUARDED';
+  const score = tension?.score ?? 0;
   const threatColor = THREAT_COLORS[level];
   const threatGlow = THREAT_GLOW[level];
 
@@ -100,30 +124,48 @@ export function HeaderBar({ sourceStatuses, events }: HeaderBarProps) {
           <button
             onClick={() => setShowDefconInfo((v) => !v)}
             className="flex cursor-pointer items-center gap-1.5 rounded px-1.5 py-0.5 transition hover:bg-white/5"
-            title="Click for threat level details"
+            title="Click for what this measures"
           >
             <Crosshair className={`h-3 w-3 ${threatColor}`} style={{ filter: threatGlow }} />
+            <span className="text-[8px] uppercase tracking-wider text-text-muted">World tension</span>
             <span className={`text-[10px] font-bold tracking-wider ${threatColor}`}>
-              {level}
+              {tension ? level : '—'}
             </span>
             <span className="text-[8px] tabular-nums text-text-muted">
-              {score.toFixed(0)}
+              {tension ? score : ''}
             </span>
+            {tension?.trend === 'rising' && <TrendingUp className="h-2.5 w-2.5 text-accent-red" />}
+            {tension?.trend === 'falling' && <TrendingDown className="h-2.5 w-2.5 text-accent-green" />}
           </button>
 
           {showDefconInfo && (
-            <div className="absolute right-0 top-8 z-50 w-72 rounded-lg border border-border bg-bg-panel-1 p-3 shadow-xl">
-              <div className="mb-2 text-xs font-bold text-text-primary">Threat Level: {level}</div>
+            <div className="absolute right-0 top-8 z-50 w-80 rounded-lg border border-border bg-bg-panel-1 p-3 shadow-xl">
+              <div className="mb-2 text-xs font-bold text-text-primary">World tension: {level} ({score}/100)</div>
               <div className="mb-2 text-[10px] leading-relaxed text-text-secondary">
-                Composite score ({score.toFixed(1)}/100) based on the top 20% most intense events out of {events.length.toLocaleString()} tracked.
-                Factors: event severity, category (conflict/disaster weighted highest), recency (last hour 2×), and event volume (minor bonus). Low-severity noise is filtered out so real crises drive the score.
+                How many serious conflicts and crises are active right now, and how intense they are
+                ({tension?.situations ?? 0} countries with an active situation). Each country's most serious
+                situation counts once; a major war counts as much as fifteen simmering disputes, and more when a
+                nuclear-armed state is directly involved. It rates situations, not headlines, so a busy news day
+                does not move it. A typical recent year reads about 50.
+                {tension && tension.trend !== 'new' && ` Trend: ${tension.trend}, comparing the last two days of events with the past month.`}
               </div>
+              {tension?.contributors?.length ? (
+                <div className="mb-2">
+                  <div className="mb-1 text-[8px] uppercase tracking-widest text-text-muted">Driving it now</div>
+                  {tension.contributors.map((c) => (
+                    <div key={c.id} className="flex justify-between py-0.5 text-[9px]">
+                      <span className="truncate text-text-secondary">{c.name}</span>
+                      <span className="ml-2 shrink-0 tabular-nums text-text-muted">{c.intensity}/5</span>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
               <div className="space-y-1 text-[9px] text-text-muted">
-                <div className="flex justify-between"><span className="text-accent-red">DEFCON 1</span><span>Score &ge; 80</span></div>
-                <div className="flex justify-between"><span className="text-accent-red">CRITICAL</span><span>Score &ge; 55</span></div>
-                <div className="flex justify-between"><span className="text-accent-amber">ELEVATED</span><span>Score &ge; 35</span></div>
-                <div className="flex justify-between"><span className="text-accent-cyan">GUARDED</span><span>Score &ge; 15</span></div>
-                <div className="flex justify-between"><span className="text-accent-green">NOMINAL</span><span>Score &lt; 15</span></div>
+                <div className="flex justify-between"><span className="text-accent-red">SEVERE</span><span>80+: war between nuclear-armed states</span></div>
+                <div className="flex justify-between"><span className="text-accent-red">HIGH</span><span>60–79: several major wars at once</span></div>
+                <div className="flex justify-between"><span className="text-accent-amber">ELEVATED</span><span>40–59: a typical troubled year</span></div>
+                <div className="flex justify-between"><span className="text-accent-cyan">GUARDED</span><span>20–39: few serious conflicts</span></div>
+                <div className="flex justify-between"><span className="text-accent-green">LOW</span><span>under 20</span></div>
               </div>
             </div>
           )}
@@ -238,75 +280,20 @@ export function HeaderBar({ sourceStatuses, events }: HeaderBarProps) {
   );
 }
 
-// --- Threat Level Calculator ---
-// Weighted composite: severity distribution × category weights × recency × volume
-
-const SEVERITY_WEIGHT: Record<Severity, number> = { 1: 0.5, 2: 1, 3: 2, 4: 4, 5: 8 };
-const CATEGORY_WEIGHT: Record<string, number> = {
-  conflict: 2.0,
-  disaster: 1.5,
-  disease: 1.5,
-  cyber: 1.3,
-  humanitarian: 1.2,
-  political: 0.8,
-  unrest: 1.5,
-};
-
-function computeThreatLevel(events: NormalizedEvent[]): { level: ThreatLevel; score: number } {
-  if (events.length === 0) return { level: 'NOMINAL', score: 0 };
-
-  const now = Date.now();
-
-  // Calculate per-event intensity scores
-  const intensities: number[] = [];
-  for (const e of events) {
-    const sevW = SEVERITY_WEIGHT[e.severity] || 1;
-    const catW = CATEGORY_WEIGHT[e.category] || 1;
-    // Recency: events in last hour get 2×, last 6h get 1.5×, last 24h get 1×, older get 0.5×
-    const ageMs = now - new Date(e.timestamp).getTime();
-    const ageH = ageMs / 3_600_000;
-    const recency = ageH < 1 ? 2.0 : ageH < 6 ? 1.5 : ageH < 24 ? 1.0 : 0.5;
-    intensities.push(sevW * catW * recency);
-  }
-
-  // Sort descending — focus on the WORST events, not the overall average.
-  // A pure average gets diluted by hundreds of low-severity political events.
-  // Instead, the top 20% (min 10) of events determine the threat level.
-  intensities.sort((a, b) => b - a);
-  const topN = Math.max(10, Math.floor(intensities.length * 0.2));
-  const topSlice = intensities.slice(0, topN);
-  const topAvg = topSlice.reduce((s, v) => s + v, 0) / topSlice.length;
-
-  // topAvg baselines: calm ~1-2, tense ~4-6, crisis ~8+
-  // Multiplier of 10 maps: calm(1.5)→15 GUARDED, tense(5)→50 ELEVATED, crisis(8)→80 DEFCON 1
-  // Volume bonus: more events = slightly higher score (log scale, adds up to ~10 points)
-  const volumeBonus = Math.min(10, Math.log2(events.length / 50) * 3);
-  const score = Math.min(100, topAvg * 10 + Math.max(0, volumeBonus));
-
-  let level: ThreatLevel;
-  if (score >= 80) level = 'DEFCON 1';
-  else if (score >= 55) level = 'CRITICAL';
-  else if (score >= 35) level = 'ELEVATED';
-  else if (score >= 15) level = 'GUARDED';
-  else level = 'NOMINAL';
-
-  return { level, score };
-}
-
-const THREAT_COLORS: Record<ThreatLevel, string> = {
-  'DEFCON 1': 'text-accent-red',
-  CRITICAL: 'text-accent-red',
+const THREAT_COLORS: Record<TensionLevel, string> = {
+  SEVERE: 'text-accent-red',
+  HIGH: 'text-accent-red',
   ELEVATED: 'text-accent-amber',
   GUARDED: 'text-accent-cyan',
-  NOMINAL: 'text-accent-green',
+  LOW: 'text-accent-green',
 };
 
-const THREAT_GLOW: Record<ThreatLevel, string> = {
-  'DEFCON 1': 'drop-shadow(0 0 6px rgba(239,68,68,0.8))',
-  CRITICAL: 'drop-shadow(0 0 4px rgba(239,68,68,0.5))',
+const THREAT_GLOW: Record<TensionLevel, string> = {
+  SEVERE: 'drop-shadow(0 0 6px rgba(239,68,68,0.8))',
+  HIGH: 'drop-shadow(0 0 4px rgba(239,68,68,0.5))',
   ELEVATED: 'drop-shadow(0 0 4px rgba(245,158,11,0.5))',
   GUARDED: 'drop-shadow(0 0 3px rgba(6,182,212,0.4))',
-  NOMINAL: 'drop-shadow(0 0 3px rgba(0,204,68,0.4))',
+  LOW: 'drop-shadow(0 0 3px rgba(0,204,68,0.4))',
 };
 
 const SEV_COLORS: Record<number, string> = {

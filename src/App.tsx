@@ -162,7 +162,7 @@ export default function App() {
           <PanelShell title="OSINT FEED">
             <OSINTPanel />
           </PanelShell>
-          <PanelShell title="BILATERAL THREAT INDEX">
+          <PanelShell title="RIVALRY TENSION (48H)" panelId="bilateral-threat-index">
             <ThreatPanel />
           </PanelShell>
         </div>

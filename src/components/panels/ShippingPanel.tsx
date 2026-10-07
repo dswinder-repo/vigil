@@ -1,6 +1,41 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Anchor, Ship, AlertTriangle, CheckCircle, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { CHOKEPOINTS, SHIPPING_ROUTES } from '@/lib/geo/shipping-routes';
+import { useGDELT } from '@/hooks/useGDELT';
+import type { NormalizedEvent } from '@/lib/types';
+
+/**
+ * Status comes from the news, not from a fixed list: a chokepoint is flagged
+ * when the last 48 hours of conflict and unrest events name it or happen on
+ * it. (It used to be hard-coded "Contested" for three straits and "Normal"
+ * for the rest, whatever was happening.) Traffic figures are typical
+ * peacetime volumes, labelled as such: there is no free live ship-tracking
+ * feed.
+ */
+const CHOKEPOINT_NAMES: Record<string, RegExp> = {
+  hormuz: /hormuz/i,
+  suez: /suez/i,
+  'bab-el-mandeb': /bab[\s-]?el[\s-]?mandeb|red sea shipping|red sea attack/i,
+  malacca: /malacca/i,
+  panama: /panama canal/i,
+  'turkish-straits': /bosphorus|dardanelles|turkish straits/i,
+  dover: /strait of dover|english channel/i,
+  'good-hope': /cape of good hope/i,
+  lombok: /lombok strait/i,
+  gibraltar: /strait of gibraltar/i,
+};
+
+function incidentsNear(events: NormalizedEvent[], cp: (typeof CHOKEPOINTS)[number]): number {
+  const cutoff = Date.now() - 48 * 3_600_000;
+  const name = CHOKEPOINT_NAMES[cp.id];
+  return events.filter((e) => {
+    if (e.category !== 'conflict' && e.category !== 'unrest') return false;
+    if (new Date(e.timestamp).getTime() < cutoff) return false;
+    if (name?.test(e.title)) return true;
+    const [lng, lat] = e.coordinates;
+    return Math.abs(lng - cp.coordinates[0]) < 1 && Math.abs(lat - cp.coordinates[1]) < 1;
+  }).length;
+}
 
 const ROUTE_TYPE_COLORS: Record<string, string> = {
   oil: '#F59E0B',
@@ -20,6 +55,13 @@ const ROUTE_TYPE_LABELS: Record<string, string> = {
  * Acts as a geographic reference layer for the globe.
  */
 export function ShippingPanel() {
+  const world = useGDELT();
+  const incidents = useMemo(() => {
+    const out: Record<string, number> = {};
+    for (const cp of CHOKEPOINTS) out[cp.id] = incidentsNear(world.data ?? [], cp);
+    return out;
+  }, [world.data]);
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 border-b border-border px-3 py-1.5">
@@ -36,7 +78,7 @@ export function ShippingPanel() {
             Strategic Chokepoints
           </div>
           {CHOKEPOINTS.map((cp) => (
-            <ChokepointRow key={cp.id} chokepoint={cp} />
+            <ChokepointRow key={cp.id} chokepoint={cp} incidents={incidents[cp.id] ?? 0} />
           ))}
         </div>
 
@@ -56,11 +98,13 @@ export function ShippingPanel() {
 
 function ChokepointRow({
   chokepoint,
+  incidents,
 }: {
   chokepoint: (typeof CHOKEPOINTS)[number];
+  incidents: number;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const isContested = ['hormuz', 'bab-el-mandeb', 'suez'].includes(chokepoint.id);
+  const isContested = incidents >= 2;
   const mapUrl = `https://maps.google.com?q=${chokepoint.coordinates[1]},${chokepoint.coordinates[0]}`;
 
   return (
@@ -81,7 +125,7 @@ function ChokepointRow({
             {chokepoint.name}
           </div>
           <div className="text-[8px] text-text-muted">
-            {chokepoint.dailyShips} ships/day · {chokepoint.oilFlow}
+            {isContested ? `${incidents} incidents reported (48h) · ` : ''}normally ~{chokepoint.dailyShips} ships/day
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
@@ -101,11 +145,11 @@ function ChokepointRow({
           <div className="flex justify-between items-center pt-0.5">
             <span className="font-mono text-[9px] text-text-muted uppercase tracking-wide">Status</span>
             <span className={`font-mono text-[9px] uppercase font-semibold ${isContested ? 'text-accent-amber' : 'text-accent-green'}`}>
-              {isContested ? 'Contested' : 'Normal'}
+              {isContested ? `${incidents} incidents in 48h` : incidents === 1 ? '1 incident in 48h' : 'No incidents reported'}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-mono text-[9px] text-text-muted uppercase tracking-wide">Oil Flow</span>
+            <span className="font-mono text-[9px] text-text-muted uppercase tracking-wide">Normal oil flow</span>
             <span className="font-mono text-[9px] text-text-secondary">{chokepoint.oilFlow}</span>
           </div>
           <a
