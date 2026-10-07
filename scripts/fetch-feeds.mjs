@@ -246,6 +246,8 @@ const WORLD_NOISE = [
   // as war). Not Patriots, Jets, Eagles, Giants, Cardinals and the like: in
   // title-case headlines those are missiles, aircraft and clergy.
   /\b(Cowboys|Buccaneers|Steelers|Packers|Bengals|Jaguars|Broncos|Seahawks|49ers|Lakers|Celtics|Knicks|Yankees|Dodgers|Red Sox|Mets)\b/,
+  // Football competitions and squads that read as attacks ("attack first").
+  /\b(Champions League|Premier League|MTN8|Bafana|Asian Games)\b/,
   /\b(recipe|restaurant|product recall|food recall|vehicle recall|lawsuit filed|class action|sued after|dealership|horoscope|lottery)\b/i,
   /\b(back to school|parenting|dating|weight loss|skincare|black friday|discount code|coupon)\b/i,
   /\b(stock (?:jumps|falls|rises)|earnings call|quarterly results|share price|IPO|dividend)\b/i,
@@ -897,6 +899,7 @@ async function buildWorld(ctx) {
   // matching takes effect at once rather than after two days.
   for (const item of prev?.items ?? []) {
     if (now - new Date(item.timestamp).getTime() > WORLD_WINDOW_MS || item.iso3 === undefined) continue;
+    if (WORLD_NOISE.some((re) => re.test(item.title))) continue;
     const hotspot = (item.hotspot && byId.get(item.hotspot)) || null;
     const category = classify(item.title, hotspot, { viaSearch: item.via === 'search' });
     if (!category) continue;
