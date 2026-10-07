@@ -242,13 +242,15 @@ const WORLD_NOISE = [
   /\b(football|soccer|cricket|basketball|baseball|hockey|tennis|golf|olympic|world cup|premier league|transfer window|playoffs?)\b/i,
   /\b(NFL|NBA|NCAA|MLB|NHL|quarterback|touchdown|halftime|season opener|matchup|head coach|starting lineup|draft pick|bowl game|Georgia Tech|Notre Dame)\b/,
   /\b(seeks|sparks?|boosts?) \w+ (?:spark|offense|defense)\b/i,
+  // Team names: "Cowboys offensive plan" and "Buccaneers corners" read as war.
+  /\b(Cowboys|Buccaneers|Patriots|Steelers|Packers|Eagles|Chiefs|Ravens|Bengals|Browns|Texans|Colts|Jaguars|Titans|Broncos|Raiders|Chargers|Bills|Dolphins|Jets|Giants|Commanders|Bears|Lions|Vikings|Falcons|Panthers|Saints|Cardinals|Rams|49ers|Seahawks|Lakers|Celtics|Knicks|Warriors|Yankees|Dodgers|Red Sox|Mets|Cubs)\b/,
   /\b(recipe|restaurant|product recall|food recall|vehicle recall|lawsuit filed|class action|sued after|dealership|horoscope|lottery)\b/i,
   /\b(back to school|parenting|dating|weight loss|skincare|black friday|discount code|coupon)\b/i,
   /\b(stock (?:jumps|falls|rises)|earnings call|quarterly results|share price|IPO|dividend)\b/i,
 ];
 
 const NOISE_PUBLISHERS =
-  /\b(heavy\.com|espn|bleacher ?report|sports illustrated|si\.com|cbs ?sports|fox ?sports|the athletic|yahoo sports|sportskeeda|tmz|people\.com|us weekly|e! news|variety|hollywood reporter|deadline|pagesix|page six)\b/i;
+  /\b(heavy\.com|espn|sb ?nation|blogging the boys|bucs nation|pff|pro football|nfl\.com|on3|247sports|rivals|fansided|bleacher ?report|sports illustrated|si\.com|cbs ?sports|fox ?sports|the athletic|yahoo sports|sportskeeda|tmz|people\.com|us weekly|e! news|variety|hollywood reporter|deadline|pagesix|page six)\b/i;
 
 /**
  * Fetch a set of RSS/Atom feeds into one merged, de-duplicated file.
