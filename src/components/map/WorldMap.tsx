@@ -8,6 +8,7 @@ import { shippingRoutesToGeoJSON, chokepointsToGeoJSON } from '@/lib/geo/shippin
 import { militaryBasesToGeoJSON, BRANCH_COLORS } from '@/lib/geo/military-bases';
 import { NUCLEAR_FACILITIES } from '@/lib/geo/nuclear-facilities';
 import { useOpenSky } from '@/hooks/useOpenSky';
+import { useChokepointTraffic } from '@/hooks/useChokepointTraffic';
 
 const SOURCE_ID = 'events';
 const MARKER_LAYER = 'event-markers';
@@ -116,6 +117,11 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
   const toggleUSWeather = useDashboardStore((s) => s.toggleUSWeather);
   const focus = useDashboardStore((s) => s.focus);
   const openSky = useOpenSky();
+  // Live chokepoint traffic for the popups; a ref, because the click handler
+  // is registered once when the map loads.
+  const { data: chokepointTraffic } = useChokepointTraffic();
+  const trafficRef = useRef(chokepointTraffic);
+  trafficRef.current = chokepointTraffic;
   const selectRef = useRef(selectEvent);
 
   eventsRef.current = events;
@@ -398,8 +404,13 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
           const props = e.features?.[0]?.properties;
           const coords = (e.features?.[0]?.geometry as GeoJSON.Point)?.coordinates;
           if (!props || !coords) return;
-          const ships = props.dailyShips ? `<div class="vigil-popup-stat">Daily vessels: ~${Number(props.dailyShips).toLocaleString()}</div>` : '';
-          const oil = props.oilFlow ? `<div class="vigil-popup-stat">Oil flow: ${props.oilFlow}</div>` : '';
+          const t = trafficRef.current?.get(String(props.id));
+          const ships = t
+            ? `<div class="vigil-popup-stat">Ships/day: ${t.perDay}${t.normal != null ? ` (normal: ${t.normal})` : ''}</div>` +
+              `<div class="vigil-popup-stat">Tankers/day: ${t.tankersPerDay}${t.tankersNormal != null ? ` (normal: ${t.tankersNormal})` : ''}</div>` +
+              `<div class="vigil-popup-desc">IMF PortWatch, 7 days to ${t.through}</div>`
+            : '<div class="vigil-popup-desc">Traffic data unavailable</div>';
+          const oil = '';
           new maplibregl.Popup({ className: 'vigil-popup', closeButton: false, maxWidth: '260px' })
             .setLngLat(coords as [number, number])
             .setHTML(

@@ -35,6 +35,11 @@ must not be committed by you, except `public/data/watchlists.json` (step 4).
   same region (verify: HTTP 200, valid RSS/Atom, newest item under 72 hours
   old), or remove it. GDELT failures (HTTP 429) are expected; ignore them.
 
+- Chokepoint traffic: `public/data/chokepoints.json` → each item's
+  `through` date should be within about a week. If PortWatch's service URL or
+  fields changed (`buildChokepoints()` in `scripts/fetch-feeds.mjs`), find the
+  current ones on portwatch.imf.org and fix them.
+
 ## 2. Is the map covering what matters?
 
 ```bash

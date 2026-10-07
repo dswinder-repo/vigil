@@ -14,6 +14,14 @@ export interface Chokepoint {
 
 export const CHOKEPOINTS: Chokepoint[] = [
   {
+    id: 'taiwan-strait',
+    name: 'Taiwan Strait',
+    coordinates: [119.5, 24.5],
+    description: 'Between mainland China and Taiwan. Main route between Northeast Asia and the rest of the world.',
+    dailyShips: 240,
+    oilFlow: 'n/a',
+  },
+  {
     id: 'hormuz',
     name: 'Strait of Hormuz',
     coordinates: [56.27, 26.56],

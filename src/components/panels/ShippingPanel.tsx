@@ -1,18 +1,40 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { Anchor, Ship, AlertTriangle, CheckCircle, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { CHOKEPOINTS, SHIPPING_ROUTES } from '@/lib/geo/shipping-routes';
 import { useGDELT } from '@/hooks/useGDELT';
+import { useChokepointTraffic, type ChokepointTraffic as Traffic } from '@/hooks/useChokepointTraffic';
 import type { NormalizedEvent } from '@/lib/types';
 
 /**
- * Status comes from the news, not from a fixed list: a chokepoint is flagged
- * when the last 48 hours of conflict and unrest events name it or happen on
- * it. (It used to be hard-coded "Contested" for three straits and "Normal"
- * for the rest, whatever was happening.) Traffic figures are typical
- * peacetime volumes, labelled as such: there is no free live ship-tracking
- * feed.
+ * Traffic is measured, not assumed: daily ship transits from IMF PortWatch
+ * (satellite AIS data, about three days behind), compared with the same week
+ * a year earlier. Until October 2026 this panel showed fixed peacetime
+ * figures, so Hormuz read "80 ships/day" while its real traffic was under 3.
+ * Incidents come from the last 48 hours of conflict and unrest events that
+ * name the chokepoint or happen on it.
  */
+function trafficStatus(t?: Traffic): { label: string; color: string; bad: boolean } {
+  if (!t || t.change == null) return { label: 'No traffic data', color: 'text-text-muted', bad: false };
+  if (t.change <= -50) return { label: 'Severely disrupted', color: 'text-accent-red', bad: true };
+  if (t.change <= -20) return { label: 'Below normal', color: 'text-accent-amber', bad: true };
+  if (t.change >= 25) return { label: 'Above normal', color: 'text-accent-cyan', bad: false };
+  return { label: 'Normal', color: 'text-accent-green', bad: false };
+}
+
+function Sparkline({ values }: { values: number[] }) {
+  if (values.length < 2) return null;
+  const max = Math.max(1, ...values);
+  const pts = values.map((v, i) => `${(i / (values.length - 1)) * 100},${24 - (v / max) * 22}`).join(' ');
+  return (
+    <svg viewBox="0 0 100 24" preserveAspectRatio="none" className="h-6 w-full">
+      <polyline points={pts} fill="none" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+    </svg>
+  );
+}
+
+const fmtDate = (d: string) => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 const CHOKEPOINT_NAMES: Record<string, RegExp> = {
+  'taiwan-strait': /taiwan strait/i,
   hormuz: /hormuz/i,
   suez: /suez/i,
   'bab-el-mandeb': /bab[\s-]?el[\s-]?mandeb|red sea shipping|red sea attack/i,
@@ -49,13 +71,10 @@ const ROUTE_TYPE_LABELS: Record<string, string> = {
   bulk: 'Bulk Cargo',
 };
 
-/**
- * Shows global shipping chokepoints and major trade route status.
- * Static data — no live AIS feed (would require commercial API).
- * Acts as a geographic reference layer for the globe.
- */
 export function ShippingPanel() {
   const world = useGDELT();
+  const { data: traffic } = useChokepointTraffic();
+  const byId = traffic ?? new Map<string, Traffic>();
   const incidents = useMemo(() => {
     const out: Record<string, number> = {};
     for (const cp of CHOKEPOINTS) out[cp.id] = incidentsNear(world.data ?? [], cp);
@@ -67,7 +86,7 @@ export function ShippingPanel() {
       <div className="flex items-center gap-2 border-b border-border px-3 py-1.5">
         <Ship className="h-3 w-3 text-accent-cyan" />
         <span className="text-[9px] uppercase tracking-wider text-text-muted">
-          {CHOKEPOINTS.length} chokepoints · {SHIPPING_ROUTES.length} routes
+          {CHOKEPOINTS.length} chokepoints · live transits
         </span>
       </div>
 
@@ -77,9 +96,14 @@ export function ShippingPanel() {
           <div className="text-[8px] uppercase tracking-widest text-text-muted mb-1">
             Strategic Chokepoints
           </div>
-          {CHOKEPOINTS.map((cp) => (
-            <ChokepointRow key={cp.id} chokepoint={cp} incidents={incidents[cp.id] ?? 0} />
-          ))}
+          {[...CHOKEPOINTS]
+            .sort((a, b) => (byId.get(a.id)?.change ?? 0) - (byId.get(b.id)?.change ?? 0))
+            .map((cp) => (
+              <ChokepointRow key={cp.id} chokepoint={cp} incidents={incidents[cp.id] ?? 0} traffic={byId.get(cp.id)} />
+            ))}
+          <div className="pt-1 text-[8px] text-text-muted">
+            Ship transits: <a href="https://portwatch.imf.org/" target="_blank" rel="noopener noreferrer" className="underline hover:text-text-primary">IMF PortWatch</a>, satellite AIS data. 7-day average vs normal (same week in 2019, 2022 and 2023, before the Red Sea attacks).
+          </div>
         </div>
 
         {/* Routes */}
@@ -99,13 +123,17 @@ export function ShippingPanel() {
 function ChokepointRow({
   chokepoint,
   incidents,
+  traffic,
 }: {
   chokepoint: (typeof CHOKEPOINTS)[number];
   incidents: number;
+  traffic?: Traffic;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const isContested = incidents >= 2;
+  const status = trafficStatus(traffic);
+  const alarm = status.bad || incidents >= 2;
   const mapUrl = `https://maps.google.com?q=${chokepoint.coordinates[1]},${chokepoint.coordinates[0]}`;
+  const change = traffic?.change;
 
   return (
     <div className="border-b border-border/30">
@@ -114,18 +142,28 @@ function ChokepointRow({
         className="w-full flex items-center gap-1.5 py-1 hover:bg-bg-panel-2 transition-colors group px-0.5 rounded"
       >
         <div className="shrink-0">
-          {isContested ? (
-            <AlertTriangle className="h-2.5 w-2.5 text-accent-amber" />
+          {alarm ? (
+            <AlertTriangle className={`h-2.5 w-2.5 ${status.bad ? status.color : 'text-accent-amber'}`} />
           ) : (
             <CheckCircle className="h-2.5 w-2.5 text-accent-green" />
           )}
         </div>
         <div className="flex-1 min-w-0 text-left">
-          <div className="text-[10px] text-text-primary truncate">
-            {chokepoint.name}
-          </div>
+          <div className="text-[10px] text-text-primary truncate">{chokepoint.name}</div>
           <div className="text-[8px] text-text-muted">
-            {isContested ? `${incidents} incidents reported (48h) · ` : ''}normally ~{chokepoint.dailyShips} ships/day
+            {traffic ? (
+              <>
+                {traffic.perDay} ships/day
+                {change != null && (
+                  <span className={status.color}>
+                    {' '}· {change > 0 ? '+' : ''}{change}% vs normal
+                  </span>
+                )}
+              </>
+            ) : (
+              'traffic data unavailable'
+            )}
+            {incidents >= 2 ? ` · ${incidents} incidents (48h)` : ''}
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
@@ -139,19 +177,35 @@ function ChokepointRow({
       </button>
       {expanded && (
         <div className="mx-0.5 mb-1.5 border border-border/50 rounded bg-bg-panel-2 px-2.5 py-1.5 flex flex-col gap-1">
-          <p className="font-mono text-[9px] text-text-secondary leading-relaxed">
-            {chokepoint.description}
-          </p>
-          <div className="flex justify-between items-center pt-0.5">
-            <span className="font-mono text-[9px] text-text-muted uppercase tracking-wide">Status</span>
-            <span className={`font-mono text-[9px] uppercase font-semibold ${isContested ? 'text-accent-amber' : 'text-accent-green'}`}>
-              {isContested ? `${incidents} incidents in 48h` : incidents === 1 ? '1 incident in 48h' : 'No incidents reported'}
-            </span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="font-mono text-[9px] text-text-muted uppercase tracking-wide">Normal oil flow</span>
-            <span className="font-mono text-[9px] text-text-secondary">{chokepoint.oilFlow}</span>
-          </div>
+          <p className="font-mono text-[9px] text-text-secondary leading-relaxed">{chokepoint.description}</p>
+          <Row label="Traffic" value={<span className={status.color}>{status.label}</span>} />
+          {traffic && (
+            <>
+              <Row label={`Ships/day (7 days to ${fmtDate(traffic.through)})`} value={`${traffic.perDay}`} />
+              {traffic.normal != null && <Row label="Normal for this week" value={`${traffic.normal}`} />}
+              {traffic.lastYear != null && (
+                <Row
+                  label="Same week last year"
+                  value={`${traffic.lastYear}${traffic.changeVsLastYear != null ? ` (${traffic.changeVsLastYear > 0 ? '+' : ''}${traffic.changeVsLastYear}%)` : ''}`}
+                />
+              )}
+              <Row
+                label="Tankers/day"
+                value={`${traffic.tankersPerDay}${traffic.tankersNormal != null ? ` (normal ${traffic.tankersNormal})` : ''}`}
+              />
+              <div className={`pt-0.5 ${status.color}`}>
+                <Sparkline values={traffic.series} />
+                <div className="flex justify-between font-mono text-[8px] text-text-muted">
+                  <span>4 months ago</span>
+                  <span>{fmtDate(traffic.through)}</span>
+                </div>
+              </div>
+            </>
+          )}
+          <Row
+            label="Incidents (48h)"
+            value={incidents === 0 ? 'None reported' : `${incidents} reported`}
+          />
           <a
             href={mapUrl}
             target="_blank"
@@ -164,6 +218,15 @@ function ChokepointRow({
           </a>
         </div>
       )}
+    </div>
+  );
+}
+
+function Row({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div className="flex justify-between items-center gap-2">
+      <span className="font-mono text-[9px] text-text-muted uppercase tracking-wide">{label}</span>
+      <span className="font-mono text-[9px] text-text-secondary text-right">{value}</span>
     </div>
   );
 }

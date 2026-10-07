@@ -571,6 +571,119 @@ async function buildRivalries(worldItems) {
 }
 
 // ---------------------------------------------------------------------------
+// chokepoints — real ship traffic from IMF PortWatch
+// ---------------------------------------------------------------------------
+
+/**
+ * Daily vessel transits through the world's shipping chokepoints, counted
+ * from satellite AIS ship-position data by the IMF and Oxford University
+ * (PortWatch). Free and public; attribution required. Data runs about three
+ * days behind real time.
+ *
+ * For each chokepoint we publish the last 7 days' average and compare it with
+ * "normal": the same calendar week in 2019, 2022 and 2023, the median of the
+ * three. Those years are before the Red Sea attacks (from November 2023)
+ * and skip the pandemic, so a disruption that has lasted years, like Bab
+ * el-Mandeb's, still reads as one; comparing with last year alone said -12%
+ * there when traffic was down nearly 60%. The same week last year is kept as
+ * a second figure, plus 120 days of daily counts for a sparkline. PortWatch
+ * updates once a day, so this refreshes at most every six hours.
+ */
+const NORMAL_YEARS = [2019, 2022, 2023];
+const PORTWATCH =
+  'https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query';
+const CHOKEPOINT_IDS = {
+  hormuz: 'chokepoint6',
+  suez: 'chokepoint1',
+  'bab-el-mandeb': 'chokepoint4',
+  malacca: 'chokepoint5',
+  panama: 'chokepoint2',
+  'turkish-straits': 'chokepoint3',
+  dover: 'chokepoint9',
+  'good-hope': 'chokepoint7',
+  lombok: 'chokepoint15',
+  gibraltar: 'chokepoint8',
+  'taiwan-strait': 'chokepoint11',
+};
+
+async function buildChokepoints() {
+  const file = 'chokepoints.json';
+  const prev = await readPrevious(file);
+  if (prev?.fetchedAt && Date.now() - new Date(prev.fetchedAt).getTime() < 6 * 3_600_000) return;
+
+  const day = (d) => d.toISOString().slice(0, 10);
+  const since = day(new Date(Date.now() - 420 * 86_400_000));
+  const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
+  const round1 = (n) => (n == null ? null : Math.round(n * 10) / 10);
+
+  const items = await pool(Object.entries(CHOKEPOINT_IDS), async ([id, portid]) => {
+    try {
+      const where = encodeURIComponent(`portid='${portid}' AND date >= DATE '${since}'`);
+      const url = `${PORTWATCH}?where=${where}&outFields=date,portname,n_total,n_tanker,n_container&orderByFields=date&returnGeometry=false&resultRecordCount=2000&f=json`;
+      const data = JSON.parse(await get(url, { timeoutMs: 60_000 }));
+      if (data.error) throw new Error(data.error.message ?? 'query failed');
+      const rows = data.features.map((f) => f.attributes);
+      if (rows.length < 30) throw new Error(`only ${rows.length} days`);
+      const byDate = new Map(rows.map((r) => [r.date, r]));
+      const dates = [...byDate.keys()].sort();
+      const recent = dates.slice(-7);
+      const yearAgo = recent.map((d) => day(new Date(new Date(`${d}T00:00:00Z`).getTime() - 364 * 86_400_000)));
+      const pick = (ds, k) => ds.map((d) => byDate.get(d)?.[k]).filter((v) => typeof v === 'number');
+      const now = { total: mean(pick(recent, 'n_total')), tanker: mean(pick(recent, 'n_tanker')), container: mean(pick(recent, 'n_container')) };
+      const base = { total: mean(pick(yearAgo, 'n_total')), tanker: mean(pick(yearAgo, 'n_tanker')) };
+      const pct = (a, b) => (b ? Math.round(((a - b) / b) * 100) : null);
+
+      // The same calendar week in each normal year.
+      const thisYear = Number(recent[0].slice(0, 4));
+      const shiftYear = (d, y) => `${Number(d.slice(0, 4)) - thisYear + y}${d.slice(4).replace('-02-29', '-02-28')}`;
+      const yearly = await Promise.all(
+        NORMAL_YEARS.map(async (y) => {
+          const ds = recent.map((d) => shiftYear(d, y)).sort();
+          const w = encodeURIComponent(`portid='${portid}' AND date >= DATE '${ds[0]}' AND date <= DATE '${ds.at(-1)}'`);
+          const r = JSON.parse(await get(`${PORTWATCH}?where=${w}&outFields=n_total,n_tanker&returnGeometry=false&f=json`, { timeoutMs: 60_000 }));
+          const a = (r.features ?? []).map((f) => f.attributes);
+          return { total: mean(a.map((x) => x.n_total)), tanker: mean(a.map((x) => x.n_tanker)) };
+        }),
+      );
+      const median = (xs) => {
+        const v = xs.filter((x) => x != null).sort((a, b) => a - b);
+        return v.length ? v[Math.floor((v.length - 1) / 2)] : null;
+      };
+      const normal = { total: median(yearly.map((y) => y.total)), tanker: median(yearly.map((y) => y.tanker)) };
+      const change = pct(now.total, normal.total);
+      status.push({ source: `portwatch:${id}`, group: file, ok: true, count: rows.length });
+      return {
+        id,
+        name: rows[0].portname,
+        through: dates.at(-1),
+        perDay: round1(now.total),
+        tankersPerDay: round1(now.tanker),
+        containerPerDay: round1(now.container),
+        normal: round1(normal.total),
+        tankersNormal: round1(normal.tanker),
+        change,
+        lastYear: round1(base.total),
+        tankersLastYear: round1(base.tanker),
+        changeVsLastYear: pct(now.total, base.total),
+        series: dates.slice(-120).map((d) => byDate.get(d).n_total),
+      };
+    } catch (err) {
+      status.push({ source: `portwatch:${id}`, group: file, ok: false, error: String(err.message || err).slice(0, 120) });
+      const last = prev?.items?.find((x) => x.id === id);
+      return last ? { ...last, stale: true } : null;
+    }
+  }, 3);
+
+  const ok = items.filter(Boolean);
+  if (!ok.length) return;
+  await writeJson(file, {
+    fetchedAt: new Date().toISOString(),
+    source: 'IMF PortWatch (portwatch.imf.org), daily transits from satellite AIS data',
+    items: ok,
+  });
+}
+
+// ---------------------------------------------------------------------------
 // snapshots — sources the browser is not allowed to call
 // ---------------------------------------------------------------------------
 
@@ -1197,6 +1310,7 @@ await buildFeedFile({ file: 'osint.json', sources: CONFIG.osint, cap: 150 });
 await buildMilitary();
 await buildMarkets();
 await buildSnapshots();
+await buildChokepoints();
 await buildGdelt();
 await buildFeedFile({ file: 'regional.json', sources: CONFIG.regional ?? [], cap: 600 });
 const ctx = await hotspotContext();

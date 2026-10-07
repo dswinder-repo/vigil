@@ -16,6 +16,10 @@ from free public feeds.
   deployment answers at `/vigil/`.
 - **Domain.** winder.works is the Vercel project `fwd` (repo `fwd-v2`). Its
   `next.config.ts` rewrites `/vigil/*` to this project's deployment.
+- **Shipping.** Chokepoint traffic is real: daily transits from IMF PortWatch
+  (satellite AIS, free, about three days behind), compared with the same week
+  in 2019, 2022 and 2023, written to `public/data/chokepoints.json` at most
+  every six hours.
 - **Fires.** NASA FIRMS' public 24-hour file (no key) is downloaded by the
   feed job, trimmed to the 400 strongest detections in `public/data/raw/firms.csv`.
 
