@@ -1,6 +1,6 @@
 {
- "fetchedAt": "2026-10-06T21:12:06.190Z",
- "sourcesOk": 72,
+ "fetchedAt": "2026-10-07T01:00:38.339Z",
+ "sourcesOk": 70,
  "sourcesTotal": 74,
  "items": [
   {
@@ -10,34 +10,40 @@
    "error": "GDELT not used for this panel"
   },
   {
+   "source": "gdelt:security",
+   "group": "gdelt.json",
+   "ok": false,
+   "error": "HTTP 429"
+  },
+  {
+   "source": "gdelt:politics",
+   "group": "gdelt.json",
+   "ok": false,
+   "error": "HTTP 429"
+  },
+  {
    "source": "gdelt:human",
    "group": "gdelt.json",
    "ok": false,
    "error": "fetch failed"
   },
   {
-   "source": "BBC World",
-   "group": "news.json",
-   "ok": true,
-   "count": 28
-  },
-  {
    "source": "Al Jazeera",
    "group": "news.json",
    "ok": true,
-   "count": 21
+   "count": 23
   },
   {
-   "source": "DW World",
+   "source": "BBC World",
    "group": "news.json",
    "ok": true,
-   "count": 11
+   "count": 30
   },
   {
    "source": "France 24",
    "group": "news.json",
    "ok": true,
-   "count": 24
+   "count": 23
   },
   {
    "source": "Middle East Eye",
@@ -46,22 +52,16 @@
    "count": 20
   },
   {
+   "source": "The Diplomat",
+   "group": "news.json",
+   "ok": true,
+   "count": 81
+  },
+  {
    "source": "Foreign Policy",
    "group": "news.json",
    "ok": true,
    "count": 20
-  },
-  {
-   "source": "The Diplomat",
-   "group": "news.json",
-   "ok": true,
-   "count": 82
-  },
-  {
-   "source": "War on the Rocks",
-   "group": "news.json",
-   "ok": true,
-   "count": 94
   },
   {
    "source": "Atlantic Council",
@@ -70,52 +70,16 @@
    "count": 96
   },
   {
-   "source": "Long War Journal",
-   "group": "news.json",
-   "ok": true,
-   "count": 29
-  },
-  {
-   "source": "ProPublica",
-   "group": "news.json",
-   "ok": true,
-   "count": 20
-  },
-  {
-   "source": "World Headlines",
-   "group": "news.json",
-   "ok": true,
-   "count": 66
-  },
-  {
    "source": "RFI English",
    "group": "news.json",
    "ok": true,
    "count": 22
   },
   {
-   "source": "ISW",
+   "source": "Long War Journal",
    "group": "news.json",
    "ok": true,
-   "count": 38
-  },
-  {
-   "source": "Lawfare",
-   "group": "news.json",
-   "ok": true,
-   "count": 32
-  },
-  {
-   "source": "Carnegie",
-   "group": "news.json",
-   "ok": true,
-   "count": 26
-  },
-  {
-   "source": "AP News",
-   "group": "news.json",
-   "ok": true,
-   "count": 87
+   "count": 29
   },
   {
    "source": "Reuters",
@@ -124,16 +88,64 @@
    "count": 95
   },
   {
-   "source": "Crisis Group ICG",
+   "source": "AP News",
    "group": "news.json",
    "ok": true,
-   "count": 10
+   "count": 88
+  },
+  {
+   "source": "World Headlines",
+   "group": "news.json",
+   "ok": true,
+   "count": 64
+  },
+  {
+   "source": "War on the Rocks",
+   "group": "news.json",
+   "ok": true,
+   "count": 94
+  },
+  {
+   "source": "Carnegie",
+   "group": "news.json",
+   "ok": true,
+   "count": 26
   },
   {
    "source": "Chatham House",
    "group": "news.json",
    "ok": true,
-   "count": 26
+   "count": 24
+  },
+  {
+   "source": "ISW",
+   "group": "news.json",
+   "ok": true,
+   "count": 39
+  },
+  {
+   "source": "DW World",
+   "group": "news.json",
+   "ok": true,
+   "count": 11
+  },
+  {
+   "source": "Lawfare",
+   "group": "news.json",
+   "ok": true,
+   "count": 31
+  },
+  {
+   "source": "ProPublica",
+   "group": "news.json",
+   "ok": true,
+   "count": 20
+  },
+  {
+   "source": "Crisis Group ICG",
+   "group": "news.json",
+   "ok": true,
+   "count": 10
   },
   {
    "source": "Bellingcat",
@@ -142,22 +154,16 @@
    "count": 9
   },
   {
-   "source": "Defense One",
-   "group": "osint.json",
-   "ok": true,
-   "count": 18
-  },
-  {
    "source": "Breaking Defense",
    "group": "osint.json",
    "ok": true,
    "count": 13
   },
   {
-   "source": "SOFREP",
+   "source": "The War Zone",
    "group": "osint.json",
    "ok": true,
-   "count": 30
+   "count": 36
   },
   {
    "source": "Task & Purpose",
@@ -166,22 +172,28 @@
    "count": 31
   },
   {
-   "source": "Military Times",
+   "source": "Defense One",
    "group": "osint.json",
    "ok": true,
-   "count": 25
+   "count": 18
   },
   {
-   "source": "The War Zone",
+   "source": "SOFREP",
    "group": "osint.json",
    "ok": true,
-   "count": 35
+   "count": 31
   },
   {
    "source": "Human Rights Watch",
    "group": "osint.json",
    "ok": true,
    "count": 20
+  },
+  {
+   "source": "Military Times",
+   "group": "osint.json",
+   "ok": true,
+   "count": 25
   },
   {
    "source": "Amnesty International",
@@ -199,7 +211,7 @@
    "source": "Space News",
    "group": "osint.json",
    "ok": true,
-   "count": 18
+   "count": 17
   },
   {
    "source": "Ars Technica",
@@ -208,10 +220,10 @@
    "count": 19
   },
   {
-   "source": "Dark Reading",
+   "source": "Defense News",
    "group": "osint.json",
    "ok": true,
-   "count": 47
+   "count": 25
   },
   {
    "source": "C4ISRNET",
@@ -220,10 +232,22 @@
    "count": 25
   },
   {
-   "source": "Defense News",
+   "source": "Dark Reading",
    "group": "osint.json",
    "ok": true,
-   "count": 25
+   "count": 47
+  },
+  {
+   "source": "Threatpost",
+   "group": "osint.json",
+   "ok": true,
+   "count": 10
+  },
+  {
+   "source": "Brookings",
+   "group": "osint.json",
+   "ok": true,
+   "count": 97
   },
   {
    "source": "Krebs on Security",
@@ -244,49 +268,13 @@
    "count": 20
   },
   {
-   "source": "Threatpost",
-   "group": "osint.json",
-   "ok": true,
-   "count": 10
-  },
-  {
-   "source": "CSIS Analysis",
-   "group": "osint.json",
-   "ok": true,
-   "count": 10
-  },
-  {
    "source": "SIPRI",
    "group": "osint.json",
    "ok": true,
    "count": 24
   },
   {
-   "source": "National Defense",
-   "group": "osint.json",
-   "ok": true,
-   "count": 11
-  },
-  {
-   "source": "Brookings",
-   "group": "osint.json",
-   "ok": true,
-   "count": 96
-  },
-  {
-   "source": "ReliefWeb Updates",
-   "group": "osint.json",
-   "ok": true,
-   "count": 100
-  },
-  {
-   "source": "Conflict Watch",
-   "group": "osint.json",
-   "ok": true,
-   "count": 76
-  },
-  {
-   "source": "Naval News",
+   "source": "CSIS Analysis",
    "group": "osint.json",
    "ok": true,
    "count": 10
@@ -298,10 +286,34 @@
    "count": 8
   },
   {
+   "source": "National Defense",
+   "group": "osint.json",
+   "ok": true,
+   "count": 11
+  },
+  {
+   "source": "ReliefWeb Updates",
+   "group": "osint.json",
+   "ok": true,
+   "count": 100
+  },
+  {
+   "source": "Conflict Watch",
+   "group": "osint.json",
+   "ok": true,
+   "count": 62
+  },
+  {
+   "source": "Naval News",
+   "group": "osint.json",
+   "ok": true,
+   "count": 10
+  },
+  {
    "source": "Military fallback (5 queries)",
    "group": "military.json",
    "ok": true,
-   "count": 218
+   "count": 222
   },
   {
    "source": "Yahoo Finance",
@@ -310,40 +322,46 @@
    "count": 25
   },
   {
+   "source": "pair:il-ir",
+   "group": "bilateral.json",
+   "ok": true,
+   "count": 37
+  },
+  {
    "source": "pair:cn-tw",
    "group": "bilateral.json",
    "ok": true,
-   "count": 34
+   "count": 37
   },
   {
    "source": "pair:us-cn",
    "group": "bilateral.json",
    "ok": true,
-   "count": 49
-  },
-  {
-   "source": "pair:il-ir",
-   "group": "bilateral.json",
-   "ok": true,
-   "count": 43
-  },
-  {
-   "source": "pair:ru-ua",
-   "group": "bilateral.json",
-   "ok": true,
-   "count": 68
-  },
-  {
-   "source": "pair:in-pk",
-   "group": "bilateral.json",
-   "ok": true,
-   "count": 41
+   "count": 51
   },
   {
    "source": "pair:kp-us",
    "group": "bilateral.json",
    "ok": true,
-   "count": 41
+   "count": 37
+  },
+  {
+   "source": "pair:in-pk",
+   "group": "bilateral.json",
+   "ok": true,
+   "count": 39
+  },
+  {
+   "source": "pair:ru-ua",
+   "group": "bilateral.json",
+   "ok": true,
+   "count": 65
+  },
+  {
+   "source": "pair:tr-sy",
+   "group": "bilateral.json",
+   "ok": true,
+   "count": 40
   },
   {
    "source": "pair:rs-xk",
@@ -352,28 +370,22 @@
    "count": 13
   },
   {
-   "source": "pair:tr-sy",
-   "group": "bilateral.json",
-   "ok": true,
-   "count": 45
-  },
-  {
    "source": "pair:az-am",
    "group": "bilateral.json",
    "ok": true,
-   "count": 49
-  },
-  {
-   "source": "pair:sa-ye",
-   "group": "bilateral.json",
-   "ok": true,
-   "count": 49
+   "count": 47
   },
   {
    "source": "pair:et-er",
    "group": "bilateral.json",
    "ok": true,
-   "count": 35
+   "count": 32
+  },
+  {
+   "source": "pair:sa-ye",
+   "group": "bilateral.json",
+   "ok": true,
+   "count": 52
   },
   {
    "source": "pair:cd-rw",
@@ -382,16 +394,16 @@
    "count": 9
   },
   {
+   "source": "pair:us-ir",
+   "group": "bilateral.json",
+   "ok": true,
+   "count": 53
+  },
+  {
    "source": "pair:ve-gy",
    "group": "bilateral.json",
    "ok": true,
    "count": 3
-  },
-  {
-   "source": "pair:us-ir",
-   "group": "bilateral.json",
-   "ok": true,
-   "count": 54
   },
   {
    "source": "snapshot:cisa-kev.json",
@@ -400,52 +412,40 @@
    "count": 1767828
   },
   {
-   "source": "snapshot:kalshi.json",
-   "group": "snapshots",
-   "ok": true,
-   "count": 378716
-  },
-  {
    "source": "snapshot:who-don.xml",
    "group": "snapshots",
    "ok": true,
    "count": 140919
   },
   {
+   "source": "snapshot:kalshi.json",
+   "group": "snapshots",
+   "ok": true,
+   "count": 404921
+  },
+  {
    "source": "snapshot:polymarket.json",
    "group": "snapshots",
    "ok": true,
-   "count": 294312
+   "count": 282525
   },
   {
    "source": "snapshot:manifold.json",
    "group": "snapshots",
    "ok": true,
-   "count": 25310
-  },
-  {
-   "source": "snapshot:gdacs.xml",
-   "group": "snapshots",
-   "ok": true,
-   "count": 481356
+   "count": 25382
   },
   {
    "source": "snapshot:aircraft.json",
    "group": "snapshots",
    "ok": true,
-   "count": 143824
+   "count": 122797
   },
   {
-   "source": "gdelt:security",
-   "group": "gdelt.json",
+   "source": "snapshot:gdacs.xml",
+   "group": "snapshots",
    "ok": true,
-   "count": 20
-  },
-  {
-   "source": "gdelt:politics",
-   "group": "gdelt.json",
-   "ok": true,
-   "count": 26
+   "count": 441406
   }
  ]
 }
