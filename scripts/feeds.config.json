@@ -389,6 +389,16 @@
         "path": "ac",
         "keep": 250
       }
+    },
+    {
+      "file": "firms.csv",
+      "expect": "csv",
+      "url": "https://firms.modaps.eosdis.nasa.gov/data/active_fire/modis-c6.1/csv/MODIS_C6_1_Global_24h.csv",
+      "timeoutMs": 120000,
+      "trim": {
+        "csvTop": 400,
+        "sortColumn": "frp"
+      }
     }
   ],
   "gdelt": [

@@ -590,6 +590,19 @@ async function buildBilateral() {
 function trimSnapshot(body, trim) {
   if (!trim) return body;
   try {
+    if (trim.csvTop) {
+      // CSV: drop low-confidence rows, keep the strongest N by one column.
+      const lines = body.trim().split('\n');
+      const head = lines[0].split(',');
+      const col = head.indexOf(trim.sortColumn);
+      const conf = head.indexOf('confidence');
+      const rows = lines
+        .slice(1)
+        .map((l) => l.split(','))
+        .filter((r) => !(conf >= 0 && /^(l|low|[0-2]?\d)$/i.test((r[conf] ?? '').trim())));
+      rows.sort((a, b) => (parseFloat(b[col]) || 0) - (parseFloat(a[col]) || 0));
+      return [lines[0], ...rows.slice(0, trim.csvTop).map((r) => r.join(','))].join('\n') + '\n';
+    }
     if (trim.items) {
       // XML: keep the newest N <item> blocks and the envelope around them.
       const blocks = body.match(/<item[\s>][\s\S]*?<\/item>/gi) || [];
@@ -635,13 +648,21 @@ async function buildSnapshots() {
       const head = body.trim().slice(0, 1);
       if (s.expect === 'json' && head !== '{' && head !== '[') throw new Error('not JSON');
       if (s.expect === 'xml' && head !== '<') throw new Error('not XML');
+      if (s.expect === 'csv' && !/^[a-z_]+,/i.test(body)) throw new Error('not CSV');
       await writeFile(dest, trimSnapshot(body, s.trim));
       fresh++;
       status.push({ source: `snapshot:${s.file}`, group: 'snapshots', ok: true, count: body.length });
     } catch (err) {
       const had = existsSync(dest);
       if (!had) {
-        await writeFile(dest, s.expect === 'xml' ? '<rss><channel></channel></rss>' : '{"features":[],"data":[],"vulnerabilities":[],"articles":[]}');
+        await writeFile(
+          dest,
+          s.expect === 'xml'
+            ? '<rss><channel></channel></rss>'
+            : s.expect === 'csv'
+              ? 'latitude,longitude,frp,confidence,acq_date,acq_time\n'
+              : '{"features":[],"data":[],"vulnerabilities":[],"articles":[]}',
+        );
       } else {
         carried++;
       }

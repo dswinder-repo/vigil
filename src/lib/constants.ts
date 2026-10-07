@@ -71,9 +71,9 @@ export const API_NWS_ALERTS = 'https://api.weather.gov/alerts/active?status=actu
 // --- Additional event sources ---
 export const API_GDACS = SNAP + 'gdacs.xml';
 export const API_CISA_KEV = SNAP + 'cisa-kev.json';
-export const API_NASA_FIRMS = import.meta.env.VITE_FIRMS_API_KEY
-  ? `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${import.meta.env.VITE_FIRMS_API_KEY}/VIIRS_SNPP_NRT/world/1`
-  : '';
+// NASA's public 24-hour fire file needs no key. The feed job downloads it and
+// keeps the 400 strongest detections in data/raw/firms.csv.
+export const API_NASA_FIRMS = `${import.meta.env.BASE_URL}data/raw/firms.csv`;
 export const API_WHO_DON = SNAP + 'who-don.xml';
 export const API_NOAA_SPACE_WEATHER = 'https://services.swpc.noaa.gov/products/alerts.json';
 

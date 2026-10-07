@@ -16,8 +16,8 @@ from free public feeds.
   deployment answers at `/vigil/`.
 - **Domain.** winder.works is the Vercel project `fwd` (repo `fwd-v2`). Its
   `next.config.ts` rewrites `/vigil/*` to this project's deployment.
-- **Env.** `VITE_FIRMS_API_KEY` (free NASA FIRMS key) is set on the Vercel
-  project and in a local `.env`. Without it the fire layer is off.
+- **Fires.** NASA FIRMS' public 24-hour file (no key) is downloaded by the
+  feed job, trimmed to the 400 strongest detections in `public/data/raw/firms.csv`.
 
 ## Hotspots: how the map keeps up with the world
 
