@@ -242,8 +242,10 @@ const WORLD_NOISE = [
   /\b(football|soccer|cricket|basketball|baseball|hockey|tennis|golf|olympic|world cup|premier league|transfer window|playoffs?)\b/i,
   /\b(NFL|NBA|NCAA|MLB|NHL|quarterback|touchdown|halftime|season opener|matchup|head coach|starting lineup|draft pick|bowl game|Georgia Tech|Notre Dame)\b/,
   /\b(seeks|sparks?|boosts?) \w+ (?:spark|offense|defense)\b/i,
-  // Team names: "Cowboys offensive plan" and "Buccaneers corners" read as war.
-  /\b(Cowboys|Buccaneers|Patriots|Steelers|Packers|Eagles|Chiefs|Ravens|Bengals|Browns|Texans|Colts|Jaguars|Titans|Broncos|Raiders|Chargers|Bills|Dolphins|Jets|Giants|Commanders|Bears|Lions|Vikings|Falcons|Panthers|Saints|Cardinals|Rams|49ers|Seahawks|Lakers|Celtics|Knicks|Warriors|Yankees|Dodgers|Red Sox|Mets|Cubs)\b/,
+  // Team names that cannot mean anything else ("Cowboys offensive plan" read
+  // as war). Not Patriots, Jets, Eagles, Giants, Cardinals and the like: in
+  // title-case headlines those are missiles, aircraft and clergy.
+  /\b(Cowboys|Buccaneers|Steelers|Packers|Bengals|Jaguars|Broncos|Seahawks|49ers|Lakers|Celtics|Knicks|Yankees|Dodgers|Red Sox|Mets)\b/,
   /\b(recipe|restaurant|product recall|food recall|vehicle recall|lawsuit filed|class action|sued after|dealership|horoscope|lottery)\b/i,
   /\b(back to school|parenting|dating|weight loss|skincare|black friday|discount code|coupon)\b/i,
   /\b(stock (?:jumps|falls|rises)|earnings call|quarterly results|share price|IPO|dividend)\b/i,
