@@ -832,7 +832,7 @@ async function buildWorld(ctx) {
 
     const hotspot =
       (place.iso3 && active.find((h) => h.iso3s.includes(place.iso3))) || hotspotOfText(item.title) || hinted || null;
-    const category = classify(item.title, hotspot);
+    const category = classify(item.title, hotspot, { viaSearch: Boolean(hinted && hinted === hotspot) });
     if (!category) {
       stats.noCategory++;
       return;
@@ -853,6 +853,7 @@ async function buildWorld(ctx) {
       category,
       severity: severityOf(item.title, hotspot),
       hotspot: hotspot?.id ?? null,
+      via: hinted ? 'search' : 'feed',
     });
   };
 
@@ -867,10 +868,14 @@ async function buildWorld(ctx) {
 
   // Carry forward the last 48 hours from earlier runs.
   const prev = await readPrevious(file);
+  // Each is checked again under the current rules, so a change to the
+  // matching takes effect at once rather than after two days.
   for (const item of prev?.items ?? []) {
-    if (now - new Date(item.timestamp).getTime() <= WORLD_WINDOW_MS && item.iso3 !== undefined) {
-      collected.push({ ...item, stale: undefined });
-    }
+    if (now - new Date(item.timestamp).getTime() > WORLD_WINDOW_MS || item.iso3 === undefined) continue;
+    const hotspot = (item.hotspot && byId.get(item.hotspot)) || null;
+    const category = classify(item.title, hotspot, { viaSearch: item.via === 'search' });
+    if (!category) continue;
+    collected.push({ ...item, category, stale: undefined });
   }
 
   // Newest first, one row per story, and no single country taking more than

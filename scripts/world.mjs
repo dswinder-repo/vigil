@@ -207,7 +207,13 @@ const DEFENCE_BUSINESS =
   /\b(contracts?|deal could|awarded|awards|invest(?:s|ment|ing)?|procure\w*|acquisition|commission(?:s|ed|ing)|fielding|prototype|unveils?|budget|\$\d|billion|industrial base|supplier|manufactur\w*|production line|program to|programme to|selects?|delivers?|deliveries|orders? (?:more|new|additional))\b/i;
 const HAPPENED = /\b(killed|kills|dead|attack\w*|struck|strikes? on|clash\w*|fighting|wounded|injured|shot down|sank|seized)\b/i;
 
-export function classify(title, hotspot = null) {
+const WAR_KINDS = new Set(['war', 'insurgency', 'flashpoint', 'humanitarian']);
+
+/**
+ * `viaSearch`: the headline came back from this hotspot's own news search, so
+ * it is about the hotspot even when its wording does not say what happened.
+ */
+export function classify(title, hotspot = null, { viaSearch = false } = {}) {
   let cat = null;
   for (const [c, re] of CATEGORIES) {
     if (re.test(title)) {
@@ -217,10 +223,13 @@ export function classify(title, hotspot = null) {
   }
   if (cat === 'conflict' && DEFENCE_BUSINESS.test(title) && !HAPPENED.test(title)) return null;
   if (cat) return cat;
-  // Only a serious hotspot vouches for a headline whose wording says nothing:
-  // in a war zone almost every story is war news, in a country with a
-  // simmering dispute most are not.
-  if (hotspot && hotspot.intensity >= 3) return KIND_CATEGORY[hotspot.kind] ?? 'political';
+  // A headline whose wording says nothing is kept only when the place vouches
+  // for it: in a country at war almost every story is war news. A country
+  // with a protest movement or an insurgency in one province also has prison
+  // openings and exam dates, so there it takes the hotspot's own search.
+  if (!hotspot) return null;
+  if (hotspot.intensity >= 4 && WAR_KINDS.has(hotspot.kind)) return KIND_CATEGORY[hotspot.kind];
+  if (viaSearch && hotspot.intensity >= 3) return KIND_CATEGORY[hotspot.kind] ?? 'political';
   return null;
 }
 
