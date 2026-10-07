@@ -34,6 +34,7 @@ import { useDashboardStore } from '@/stores/dashboard-store';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import type { NormalizedEvent } from '@/lib/types';
 import { deduplicateEvents } from '@/lib/deduplicateEvents';
+import { HotspotsPanel } from '@/components/panels/HotspotsPanel';
 
 export default function App() {
   const usgs = useUSGS();
@@ -51,6 +52,7 @@ export default function App() {
   const faaTfr = useFAATFR();
   const nuclearActivity = useNuclearActivity();
   const selectedEvent = useDashboardStore((s) => s.selectedEvent);
+  const showUSWeather = useDashboardStore((s) => s.showUSWeather);
   const filters = useDashboardStore((s) => s.filters);
 
   useKeyboardShortcuts();
@@ -62,7 +64,9 @@ export default function App() {
       ...(gdelt.data ?? []),
       ...(reliefweb.data ?? []),
       ...(reliefwebConflict.data ?? []),
-      ...(nws.data?.events ?? []),
+      // US weather warnings number in the hundreds on a stormy day and used to
+      // make the US look busier than any war zone. Off unless asked for.
+      ...(showUSWeather ? nws.data?.events ?? [] : []),
       ...(gdacs.data ?? []),
       ...(cisa.data ?? []),
       ...(firms.data ?? []),
@@ -72,7 +76,7 @@ export default function App() {
       ...(faaTfr.data ?? []),
       ...(nuclearActivity.data ?? []),
     ]),
-    [usgs.data, eonet.data, gdelt.data, reliefweb.data, reliefwebConflict.data, nws.data, gdacs.data, cisa.data,
+    [usgs.data, eonet.data, gdelt.data, reliefweb.data, reliefwebConflict.data, nws.data, showUSWeather, gdacs.data, cisa.data,
      firms.data, who.data, spaceWeather.data, meteoalarm.data, faaTfr.data, nuclearActivity.data]
   );
 
@@ -130,6 +134,9 @@ export default function App() {
               <IntelFeed events={allEvents} />
             </PanelShell>
           )}
+          <PanelShell title="HOTSPOTS">
+            <HotspotsPanel />
+          </PanelShell>
           <PanelShell title="SEA ROUTES">
             <ShippingPanel />
           </PanelShell>

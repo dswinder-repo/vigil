@@ -62,6 +62,7 @@ export const API_EONET = 'https://eonet.gsfc.nasa.gov/api/v3/events?status=open&
 // One file, written by the scheduled job, with each item already sorted into
 // a category. GDELT's geo endpoint was retired; see scripts/fetch-feeds.mjs.
 export const GDELT_FEED_URL = `${import.meta.env.BASE_URL}data/world.json`;
+export const HOTSPOTS_URL = `${import.meta.env.BASE_URL}data/hotspots.json`;
 // Keep legacy single URL for backward compat reference
 export const API_GDELT = GDELT_FEED_URL;
 export const API_RELIEFWEB = SNAP + 'reliefweb-disasters.json';

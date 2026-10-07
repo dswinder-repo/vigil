@@ -103,6 +103,11 @@ export function deduplicateEvents(events: NormalizedEvent[]): NormalizedEvent[] 
       if (merged.has(sorted[j].id)) continue;
       const candidate = sorted[j];
 
+      // The world feed is de-duplicated on the server, story by story. Stories
+      // about one country sit close together on purpose, so comparing them
+      // here only merged different stories (ten Iran headlines became one).
+      if (winner.source === 'gdelt' && candidate.source === 'gdelt') continue;
+
       // Must be same category
       if (winner.category !== candidate.category) continue;
 

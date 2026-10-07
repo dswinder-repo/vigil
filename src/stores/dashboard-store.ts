@@ -14,6 +14,9 @@ interface DashboardState {
   showMilitaryBases: boolean;
   showFlights: boolean;
   showNuclearFacilities: boolean;
+  showUSWeather: boolean;
+  /** A place the map should fly to (set by the hotspots panel). */
+  focus: { center: [number, number]; zoom: number; at: number } | null;
   aiApiKey: string;
   aiProvider: 'openai' | 'anthropic' | '';
   selectEvent: (event: NormalizedEvent | null) => void;
@@ -26,6 +29,8 @@ interface DashboardState {
   toggleMilitaryBases: () => void;
   toggleFlights: () => void;
   toggleNuclearFacilities: () => void;
+  toggleUSWeather: () => void;
+  focusOn: (center: [number, number], zoom?: number) => void;
   setAIKey: (key: string, provider: 'openai' | 'anthropic' | '') => void;
 }
 
@@ -42,6 +47,8 @@ export const useDashboardStore = create<DashboardState>()(
       showMilitaryBases: false,
       showFlights: false,
       showNuclearFacilities: false,
+      showUSWeather: false,
+      focus: null,
       aiApiKey: '',
       aiProvider: '',
       selectEvent: (event) => set({ selectedEvent: event }),
@@ -76,6 +83,8 @@ export const useDashboardStore = create<DashboardState>()(
         set((state) => ({ showFlights: !state.showFlights })),
       toggleNuclearFacilities: () =>
         set((state) => ({ showNuclearFacilities: !state.showNuclearFacilities })),
+      toggleUSWeather: () => set((state) => ({ showUSWeather: !state.showUSWeather })),
+      focusOn: (center, zoom = 4.5) => set({ focus: { center, zoom, at: Date.now() }, selectedEvent: null }),
       setAIKey: (key, provider) => set({ aiApiKey: key, aiProvider: provider }),
     }),
     {
@@ -90,6 +99,7 @@ export const useDashboardStore = create<DashboardState>()(
         showMilitaryBases: state.showMilitaryBases,
         showFlights: state.showFlights,
         showNuclearFacilities: state.showNuclearFacilities,
+        showUSWeather: state.showUSWeather,
         aiApiKey: state.aiApiKey,
         aiProvider: state.aiProvider,
       }),
@@ -113,6 +123,7 @@ export const useDashboardStore = create<DashboardState>()(
           showMilitaryBases: p.showMilitaryBases ?? false,
           showFlights: p.showFlights ?? false,
           showNuclearFacilities: p.showNuclearFacilities ?? false,
+          showUSWeather: p.showUSWeather ?? false,
           aiApiKey: p.aiApiKey ?? '',
           aiProvider: p.aiProvider ?? '',
         };

@@ -112,6 +112,9 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
   const toggleFlights = useDashboardStore((s) => s.toggleFlights);
   const showNuclearFacilities = useDashboardStore((s) => s.showNuclearFacilities);
   const toggleNuclearFacilities = useDashboardStore((s) => s.toggleNuclearFacilities);
+  const showUSWeather = useDashboardStore((s) => s.showUSWeather);
+  const toggleUSWeather = useDashboardStore((s) => s.toggleUSWeather);
+  const focus = useDashboardStore((s) => s.focus);
   const openSky = useOpenSky();
   const selectRef = useRef(selectEvent);
 
@@ -672,6 +675,15 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
     if (selectedEvent) flyTo(selectedEvent);
   }, [selectedEvent, flyTo]);
 
+  useEffect(() => {
+    if (!focus) return;
+    try {
+      mapRef.current?.flyTo({ center: focus.center, zoom: focus.zoom, duration: 1500 });
+    } catch (err) {
+      console.warn('[WorldMap] focus failed:', err);
+    }
+  }, [focus]);
+
   return (
     <div className="relative h-full w-full">
       <div ref={containerRef} className="h-full w-full" />
@@ -719,6 +731,20 @@ export function WorldMap({ events }: { events: NormalizedEvent[] }) {
           ].join(' ')}
         >
           NUCLEAR
+        </button>
+        <button
+          onClick={toggleUSWeather}
+          title={showUSWeather ? 'Hide US weather warnings' : 'Show US weather warnings (NWS)'}
+          className={[
+            'px-2 py-1 text-[10px] font-bold tracking-widest uppercase rounded',
+            'border transition-colors duration-150',
+            'shadow-sm focus:outline-none focus:ring-1 focus:ring-offset-0',
+            showUSWeather
+              ? 'bg-[#93C5FD] text-black border-[#93C5FD] focus:ring-[#93C5FD]'
+              : 'bg-black/60 text-[#93C5FD] border-[#93C5FD]/50 hover:bg-[#93C5FD]/10 focus:ring-[#93C5FD]',
+          ].join(' ')}
+        >
+          US WX
         </button>
       </div>
     </div>
