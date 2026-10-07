@@ -1,9 +1,10 @@
 # Vigil upkeep — instructions for the weekly maintenance run
 
-Vigil (https://winder.works/vigil/) must keep working and keep up with the
-world without its owner, Dustyn, ever thinking about it. A scheduled Claude
-run follows this file once a week. You are that run. Fix what you find, verify
-it, push it. Contact Dustyn only for something you cannot fix yourself.
+Vigil (https://winder.works/vigil/) is a side project. It must keep working
+and show accurate information to anyone who opens it, without its owner ever
+thinking about it or hearing about it. A scheduled Claude run follows this
+file once a week. You are that run. Fix what you find, verify it, push it.
+Never contact the owner and never write anywhere outside this repository.
 
 Read `README.md` first: it explains the feeds, the hotspot layers and the
 files named below.
@@ -117,16 +118,14 @@ Append a dated entry to `UPKEEP-LOG.md`: what you checked, what you changed,
 what you left alone and why. Commit it with your changes (or alone, if you
 changed nothing).
 
-Contact Dustyn only if something is broken that you could not fix, or a fix
-needs him (a password, an account, money, a decision about what Vigil is
-for). Do that by adding one dated line to `harold/briefs/housekeeping-notes.md`
-in the harold-os repository and pushing it; his morning brief shows it once.
-Everything else stays in `UPKEEP-LOG.md`.
+If something is broken that you could not fix (it needs an account, a
+password or money), say so at the top of that log entry, and next week's run
+will see it and try again. Nothing is sent anywhere else.
 
 ## Limits
 
 - Do not change: `vercel.json`, `.github/workflows/` (unless the feed job is
   broken and the fix is there), dependencies in `package.json`, domains,
-  secrets, or anything outside this repository except the one note above.
+  secrets, or anything outside this repository.
 - Do not delete working features. Do not rewrite the app.
 - Prefer small, verified changes over large ones.
