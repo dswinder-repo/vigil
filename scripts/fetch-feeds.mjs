@@ -238,7 +238,7 @@ const WORLD_NOISE = [
   /^(opinion|analysis|comment|editorial|explainer|profile|review|interview|podcast|in pictures)\b/i,
   /^(how|why|what|who|when|where|is|are|can|could|should|would|will|does|do|did|has|have)\b.*\?\s*$/i,
   /\b(tail risk|thought experiment|hypothetical|what if|imagine if|here's why|here is why|the case for|the case against|ranked|explained)\b/i,
-  /\b(concert|album|new song|single|music video|band|tour dates|setlist|singer|rapper|actor|actress|celebrity|hollywood|box office|netflix|grammy|oscar|red carpet)\b/i,
+  /\b(concert|album|new song|music video|tour dates|setlist|singer|rapper|actor|actress|celebrity|hollywood|box office|netflix|grammy|oscar|red carpet)\b/i,
   /\b(football|soccer|cricket|basketball|baseball|hockey|tennis|golf|olympic|world cup|premier league|transfer window|playoffs?|stadium|homecoming|tailgate|kickoff|quarterbacks?|player of the (?:week|month|year)|rookie of the|draft picks?|free agen\w*)\b/i,
   /\b(NFL|NBA|NCAA|MLB|NHL|NFC|AFC|MVP|quarterback|touchdown|halftime|season opener|matchup|head coach|starting lineup|draft pick|bowl game|Georgia Tech|Notre Dame)\b/,
   /\b(seeks|sparks?|boosts?) \w+ (?:spark|offense|defense)\b/i,
