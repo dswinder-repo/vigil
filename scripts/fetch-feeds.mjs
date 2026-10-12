@@ -253,6 +253,9 @@ const WORLD_NOISE = [
   /;[^;]+;/,
   /^headlines for\b/i,
   /\b(recipe|restaurant|product recall|food recall|vehicle recall|lawsuit filed|class action|sued after|dealership|horoscope|lottery)\b/i,
+  // Lifestyle, fundraising, culture and courtesy-call items that matched a
+  // country name only (femtech, GoFundMe, unveiled artwork, ambassador calls).
+  /\b(femtech|gofundme|artwork|unveiled after|receives (?:H\.E\.|ambassador)|courtesy call|recurring script)\b/i,
   /\b(back to school|parenting|dating|weight loss|skincare|black friday|discount code|coupon)\b/i,
   /\b(stock (?:jumps|falls|rises)|earnings call|quarterly results|share price|IPO|dividend)\b/i,
 ];
