@@ -17,3 +17,10 @@ One entry per weekly maintenance run (see UPKEEP.md).
 - **Left alone:** Ecuador gang war is still quiet and Cameroon thin (1). English-language coverage is sparse this week; Google News returns almost nothing for them. Watchlist countries CAR, Rwanda and Belize are quiet, and Algeria, Bangladesh, El Salvador, Honduras and Eritrea are thin. That is driven by the outside lists; I found no news gap behind them.
 - **Monthly:** curated list reviewed today and CrisisWatch is the latest edition (September Trends/October Alerts 2026), so neither was due.
 - **Verified:** feed job in a copy, coverage report (no top hotspot worse; 1087 → 1152 events), `pnpm build`.
+
+## 2026-10-12 (weekly run)
+- **Data flow:** fine. `status.json` refreshed 08:55 UTC today (gaps of 4–9 h between refreshes, not stalled). Chokepoints `through` is 2026-10-04 in the stored file; the feed job in a copy was run to check it (PortWatch lag is the cause if still old, no URL/field change found).
+- **Sources:** Reuters, Lawfare, Carnegie, SOFREP and SIPRI (all Google News site searches) returned "no items parsed" on the latest run but were fine three days ago, so I read it as Google throttling GitHub runners and left them. HRW still 403 (left, as last week). GDELT failures expected. No config changes.
+- **Coverage vs. news:** Belgium anti-austerity riots (Brussels 9 Oct, 200+ arrests in Liège) were only covered as a side-note of the French protests. Added a dedicated `belgium-austerity-protests` hotspot (intensity 3); it shows as covered. Other major stories (Iran, Ukraine, Gaza, Sudan, Ethiopia, Yemen, US anti-ICE protests) are already on the list. Web search for the week was thin, so the check was not exhaustive.
+- **Monthly:** curated list reviewed 2026-10-07 and CrisisWatch is the current edition, so neither due.
+- **Verified:** feed job in a copy, coverage report (no hotspot went from covered to worse; counts move with the rolling window), `pnpm build`.
