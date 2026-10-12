@@ -19,7 +19,7 @@ One entry per weekly maintenance run (see UPKEEP.md).
 - **Verified:** feed job in a copy, coverage report (no top hotspot worse; 1087 → 1152 events), `pnpm build`.
 
 ## 2026-10-12 (weekly run)
-- **Data flow:** fine. `status.json` refreshed 08:55 UTC today (gaps of 4–9 h between refreshes, not stalled). Chokepoints `through` is 2026-10-04 in the stored file; the feed job in a copy was run to check it (PortWatch lag is the cause if still old, no URL/field change found).
+- **Data flow:** fine. `status.json` refreshed 08:55 UTC today (gaps of 4–9 h, not stalled). Chokepoints `through` is 2026-10-04: I queried the PortWatch service directly and its newest date is also 2026-10-04, so the lag is upstream; URL and fields still work.
 - **Sources:** Reuters, Lawfare, Carnegie, SOFREP and SIPRI (all Google News site searches) returned "no items parsed" on the latest run but were fine three days ago, so I read it as Google throttling GitHub runners and left them. HRW still 403 (left, as last week). GDELT failures expected. No config changes.
 - **Coverage vs. news:** Belgium anti-austerity riots (Brussels 9 Oct, 200+ arrests in Liège) were only covered as a side-note of the French protests. Added a dedicated `belgium-austerity-protests` hotspot (intensity 3); it shows as covered. Other major stories (Iran, Ukraine, Gaza, Sudan, Ethiopia, Yemen, US anti-ICE protests) are already on the list. Web search for the week was thin, so the check was not exhaustive.
 - **Monthly:** curated list reviewed 2026-10-07 and CrisisWatch is the current edition, so neither due.
