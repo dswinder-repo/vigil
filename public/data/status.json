@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-31T03:40:00.875Z",
+ "fetchedAt": "2026-10-31T04:14:50.936Z",
  "sourcesOk": 248,
  "sourcesTotal": 263,
  "items": [
@@ -19,19 +19,19 @@
    "source": "gdelt:security",
    "group": "gdelt.json",
    "ok": false,
-   "error": "HTTP 429"
+   "error": "no articles"
   },
   {
    "source": "gdelt:politics",
    "group": "gdelt.json",
    "ok": false,
-   "error": "HTTP 429"
+   "error": "no articles"
   },
   {
    "source": "gdelt:human",
    "group": "gdelt.json",
    "ok": false,
-   "error": "no articles"
+   "error": "HTTP 429"
   },
   {
    "source": "coverage: Rwanda",
@@ -112,18 +112,6 @@
    "count": 23
   },
   {
-   "source": "Middle East Eye",
-   "group": "news.json",
-   "ok": true,
-   "count": 20
-  },
-  {
-   "source": "DW World",
-   "group": "news.json",
-   "ok": true,
-   "count": 10
-  },
-  {
    "source": "Foreign Policy",
    "group": "news.json",
    "ok": true,
@@ -136,16 +124,10 @@
    "count": 86
   },
   {
-   "source": "Long War Journal",
+   "source": "DW World",
    "group": "news.json",
    "ok": true,
-   "count": 29
-  },
-  {
-   "source": "RFI English",
-   "group": "news.json",
-   "ok": true,
-   "count": 20
+   "count": 10
   },
   {
    "source": "Atlantic Council",
@@ -154,22 +136,16 @@
    "count": 94
   },
   {
-   "source": "Reuters",
+   "source": "RFI English",
    "group": "news.json",
    "ok": true,
-   "count": 95
+   "count": 20
   },
   {
-   "source": "AP News",
+   "source": "Middle East Eye",
    "group": "news.json",
    "ok": true,
-   "count": 87
-  },
-  {
-   "source": "World Headlines",
-   "group": "news.json",
-   "ok": true,
-   "count": 53
+   "count": 20
   },
   {
    "source": "War on the Rocks",
@@ -178,16 +154,34 @@
    "count": 94
   },
   {
-   "source": "Lawfare",
+   "source": "Long War Journal",
    "group": "news.json",
    "ok": true,
-   "count": 43
+   "count": 29
+  },
+  {
+   "source": "World Headlines",
+   "group": "news.json",
+   "ok": true,
+   "count": 56
   },
   {
    "source": "ISW",
    "group": "news.json",
    "ok": true,
-   "count": 31
+   "count": 32
+  },
+  {
+   "source": "Reuters",
+   "group": "news.json",
+   "ok": true,
+   "count": 95
+  },
+  {
+   "source": "Lawfare",
+   "group": "news.json",
+   "ok": true,
+   "count": 45
   },
   {
    "source": "ProPublica",
@@ -196,16 +190,22 @@
    "count": 20
   },
   {
+   "source": "AP News",
+   "group": "news.json",
+   "ok": true,
+   "count": 87
+  },
+  {
    "source": "Carnegie",
    "group": "news.json",
    "ok": true,
-   "count": 32
+   "count": 31
   },
   {
    "source": "Chatham House",
    "group": "news.json",
    "ok": true,
-   "count": 23
+   "count": 22
   },
   {
    "source": "Crisis Group ICG",
@@ -220,10 +220,22 @@
    "count": 9
   },
   {
+   "source": "Defense One",
+   "group": "osint.json",
+   "ok": true,
+   "count": 16
+  },
+  {
    "source": "Breaking Defense",
    "group": "osint.json",
    "ok": true,
    "count": 14
+  },
+  {
+   "source": "Arms Control Wonk",
+   "group": "osint.json",
+   "ok": true,
+   "count": 4
   },
   {
    "source": "The War Zone",
@@ -238,22 +250,16 @@
    "count": 27
   },
   {
-   "source": "Arms Control Wonk",
-   "group": "osint.json",
-   "ok": true,
-   "count": 4
-  },
-  {
-   "source": "Defense One",
-   "group": "osint.json",
-   "ok": true,
-   "count": 16
-  },
-  {
    "source": "SOFREP",
    "group": "osint.json",
    "ok": true,
    "count": 35
+  },
+  {
+   "source": "Amnesty International",
+   "group": "osint.json",
+   "ok": true,
+   "count": 12
   },
   {
    "source": "Military Times",
@@ -268,16 +274,16 @@
    "count": 20
   },
   {
+   "source": "Ars Technica",
+   "group": "osint.json",
+   "ok": true,
+   "count": 19
+  },
+  {
    "source": "Krebs on Security",
    "group": "osint.json",
    "ok": true,
    "count": 9
-  },
-  {
-   "source": "Amnesty International",
-   "group": "osint.json",
-   "ok": true,
-   "count": 12
   },
   {
    "source": "Space News",
@@ -286,19 +292,7 @@
    "count": 14
   },
   {
-   "source": "Ars Technica",
-   "group": "osint.json",
-   "ok": true,
-   "count": 19
-  },
-  {
    "source": "Defense News",
-   "group": "osint.json",
-   "ok": true,
-   "count": 10
-  },
-  {
-   "source": "C4ISRNET",
    "group": "osint.json",
    "ok": true,
    "count": 10
@@ -308,6 +302,18 @@
    "group": "osint.json",
    "ok": true,
    "count": 50
+  },
+  {
+   "source": "Threatpost",
+   "group": "osint.json",
+   "ok": true,
+   "count": 9
+  },
+  {
+   "source": "C4ISRNET",
+   "group": "osint.json",
+   "ok": true,
+   "count": 10
   },
   {
    "source": "Brookings",
@@ -322,25 +328,13 @@
    "count": 10
   },
   {
-   "source": "CSIS Analysis",
-   "group": "osint.json",
-   "ok": true,
-   "count": 10
-  },
-  {
-   "source": "Threatpost",
-   "group": "osint.json",
-   "ok": true,
-   "count": 9
-  },
-  {
    "source": "RAND",
    "group": "osint.json",
    "ok": true,
    "count": 19
   },
   {
-   "source": "National Defense",
+   "source": "CSIS Analysis",
    "group": "osint.json",
    "ok": true,
    "count": 10
@@ -349,7 +343,13 @@
    "source": "SIPRI",
    "group": "osint.json",
    "ok": true,
-   "count": 43
+   "count": 40
+  },
+  {
+   "source": "National Defense",
+   "group": "osint.json",
+   "ok": true,
+   "count": 10
   },
   {
    "source": "ReliefWeb Updates",
@@ -361,7 +361,7 @@
    "source": "Conflict Watch",
    "group": "osint.json",
    "ok": true,
-   "count": 52
+   "count": 46
   },
   {
    "source": "Naval News",
@@ -373,7 +373,7 @@
    "source": "Military fallback (5 queries)",
    "group": "military.json",
    "ok": true,
-   "count": 190
+   "count": 195
   },
   {
    "source": "Yahoo Finance",
@@ -388,22 +388,16 @@
    "count": 1826755
   },
   {
-   "source": "snapshot:polymarket.json",
-   "group": "snapshots",
-   "ok": true,
-   "count": 737860
-  },
-  {
    "source": "snapshot:who-don.xml",
    "group": "snapshots",
    "ok": true,
    "count": 901863
   },
   {
-   "source": "snapshot:aircraft.json",
+   "source": "snapshot:polymarket.json",
    "group": "snapshots",
    "ok": true,
-   "count": 38856
+   "count": 742732
   },
   {
    "source": "snapshot:firms.csv",
@@ -412,28 +406,16 @@
    "count": 1348802
   },
   {
+   "source": "snapshot:aircraft.json",
+   "group": "snapshots",
+   "ok": true,
+   "count": 37053
+  },
+  {
    "source": "snapshot:gdacs.xml",
    "group": "snapshots",
    "ok": true,
    "count": 766861
-  },
-  {
-   "source": "Al-Monitor",
-   "group": "regional.json",
-   "ok": true,
-   "count": 19
-  },
-  {
-   "source": "IranWire (EN)",
-   "group": "regional.json",
-   "ok": true,
-   "count": 457
-  },
-  {
-   "source": "Amwaj.media",
-   "group": "regional.json",
-   "ok": true,
-   "count": 58
   },
   {
    "source": "Iran International (EN)",
@@ -442,10 +424,22 @@
    "count": 50
   },
   {
-   "source": "The National (UAE)",
+   "source": "Al-Monitor",
    "group": "regional.json",
    "ok": true,
-   "count": 98
+   "count": 19
+  },
+  {
+   "source": "Amwaj.media",
+   "group": "regional.json",
+   "ok": true,
+   "count": 58
+  },
+  {
+   "source": "IranWire (EN)",
+   "group": "regional.json",
+   "ok": true,
+   "count": 457
   },
   {
    "source": "Asharq Al-Awsat (EN)",
@@ -454,10 +448,22 @@
    "count": 293
   },
   {
+   "source": "The National (UAE)",
+   "group": "regional.json",
+   "ok": true,
+   "count": 98
+  },
+  {
    "source": "Jerusalem Post",
    "group": "regional.json",
    "ok": true,
    "count": 26
+  },
+  {
+   "source": "The New Humanitarian",
+   "group": "regional.json",
+   "ok": true,
+   "count": 9
   },
   {
    "source": "Tehran Times",
@@ -478,22 +484,10 @@
    "count": 20
   },
   {
-   "source": "The New Humanitarian",
-   "group": "regional.json",
-   "ok": true,
-   "count": 9
-  },
-  {
    "source": "Meduza (EN)",
    "group": "regional.json",
    "ok": true,
    "count": 29
-  },
-  {
-   "source": "Sudans Post",
-   "group": "regional.json",
-   "ok": true,
-   "count": 10
   },
   {
    "source": "DVB English",
@@ -502,16 +496,16 @@
    "count": 8
   },
   {
-   "source": "Haitian Times",
+   "source": "Radio Tamazuj",
    "group": "regional.json",
    "ok": true,
-   "count": 10
+   "count": 11
   },
   {
-   "source": "Le Nouvelliste",
+   "source": "Radio Dabanga",
    "group": "regional.json",
    "ok": true,
-   "count": 26
+   "count": 12
   },
   {
    "source": "Kyiv Independent",
@@ -520,7 +514,7 @@
    "count": 98
   },
   {
-   "source": "Myanmar Now",
+   "source": "Haitian Times",
    "group": "regional.json",
    "ok": true,
    "count": 10
@@ -530,6 +524,12 @@
    "group": "regional.json",
    "ok": true,
    "count": 9
+  },
+  {
+   "source": "Myanmar Now",
+   "group": "regional.json",
+   "ok": true,
+   "count": 10
   },
   {
    "source": "MercoPress",
@@ -544,28 +544,34 @@
    "count": 10
   },
   {
-   "source": "Caracas Chronicles",
+   "source": "Le Nouvelliste",
    "group": "regional.json",
    "ok": true,
-   "count": 3
-  },
-  {
-   "source": "Radio Tamazuj",
-   "group": "regional.json",
-   "ok": true,
-   "count": 11
-  },
-  {
-   "source": "RFI Afrique",
-   "group": "regional.json",
-   "ok": true,
-   "count": 23
+   "count": 26
   },
   {
    "source": "Global Voices",
    "group": "regional.json",
    "ok": true,
    "count": 15
+  },
+  {
+   "source": "Colombia Reports",
+   "group": "regional.json",
+   "ok": true,
+   "count": 5
+  },
+  {
+   "source": "Caracas Chronicles",
+   "group": "regional.json",
+   "ok": true,
+   "count": 3
+  },
+  {
+   "source": "RFI Afrique",
+   "group": "regional.json",
+   "ok": true,
+   "count": 23
   },
   {
    "source": "Africanews",
@@ -577,13 +583,19 @@
    "source": "Dawn",
    "group": "regional.json",
    "ok": true,
-   "count": 28
+   "count": 29
   },
   {
-   "source": "Colombia Reports",
+   "source": "Sahel Intelligence",
    "group": "regional.json",
    "ok": true,
-   "count": 5
+   "count": 10
+  },
+  {
+   "source": "Rappler",
+   "group": "regional.json",
+   "ok": true,
+   "count": 8
   },
   {
    "source": "Hindustan Times World",
@@ -598,7 +610,7 @@
    "count": 14
   },
   {
-   "source": "Sahel Intelligence",
+   "source": "Sudans Post",
    "group": "regional.json",
    "ok": true,
    "count": 10
@@ -610,40 +622,10 @@
    "count": 85
   },
   {
-   "source": "Rappler",
-   "group": "regional.json",
-   "ok": true,
-   "count": 8
-  },
-  {
-   "source": "Radio Dabanga",
-   "group": "regional.json",
-   "ok": true,
-   "count": 12
-  },
-  {
-   "source": "search: Russia strike Kyiv",
-   "group": "signals.json",
-   "ok": true,
-   "count": 87
-  },
-  {
-   "source": "search: Ukraine front line",
-   "group": "signals.json",
-   "ok": true,
-   "count": 48
-  },
-  {
    "source": "search: Iran strike",
    "group": "signals.json",
    "ok": true,
    "count": 96
-  },
-  {
-   "source": "search: Strait of Hormuz",
-   "group": "signals.json",
-   "ok": true,
-   "count": 99
   },
   {
    "source": "search: Iran war",
@@ -652,46 +634,64 @@
    "count": 95
   },
   {
+   "source": "search: Russia strike Kyiv",
+   "group": "signals.json",
+   "ok": true,
+   "count": 99
+  },
+  {
+   "source": "search: Ukraine front line",
+   "group": "signals.json",
+   "ok": true,
+   "count": 48
+  },
+  {
    "source": "search: Ukraine war",
    "group": "signals.json",
    "ok": true,
    "count": 99
   },
   {
-   "source": "search: Kordofan fighting",
+   "source": "search: Strait of Hormuz",
    "group": "signals.json",
    "ok": true,
-   "count": 5
+   "count": 99
   },
   {
    "source": "search: El Obeid",
    "group": "signals.json",
    "ok": true,
-   "count": 6
+   "count": 7
   },
   {
    "source": "search: Bab el-Mandeb",
    "group": "signals.json",
    "ok": true,
-   "count": 38
+   "count": 26
+  },
+  {
+   "source": "search: Kordofan fighting",
+   "group": "signals.json",
+   "ok": true,
+   "count": 4
+  },
+  {
+   "source": "search: Sudan RSF",
+   "group": "signals.json",
+   "ok": true,
+   "count": 51
   },
   {
    "source": "search: Houthi Saudi",
    "group": "signals.json",
    "ok": true,
-   "count": 99
+   "count": 98
   },
   {
    "source": "search: Yemen Houthis",
    "group": "signals.json",
    "ok": true,
    "count": 97
-  },
-  {
-   "source": "search: Sudan RSF",
-   "group": "signals.json",
-   "ok": true,
-   "count": 52
   },
   {
    "source": "search: Fano Amhara",
@@ -703,7 +703,7 @@
    "source": "search: Ethiopia Tigray fighting",
    "group": "signals.json",
    "ok": true,
-   "count": 21
+   "count": 37
   },
   {
    "source": "search: Eritrean troops Tigray",
@@ -718,10 +718,10 @@
    "count": 0
   },
   {
-   "source": "search: Sudan displacement WFP",
+   "source": "search: Sudan famine",
    "group": "signals.json",
    "ok": true,
-   "count": 4
+   "count": 10
   },
   {
    "source": "search: Ethiopia Eritrea",
@@ -730,52 +730,28 @@
    "count": 58
   },
   {
+   "source": "search: Sudan displacement WFP",
+   "group": "signals.json",
+   "ok": true,
+   "count": 4
+  },
+  {
    "source": "search: Ituri displacement",
    "group": "signals.json",
    "ok": true,
    "count": 7
   },
   {
-   "source": "search: Sudan famine",
-   "group": "signals.json",
-   "ok": true,
-   "count": 23
-  },
-  {
    "source": "search: Congo Ebola outbreak",
    "group": "signals.json",
    "ok": true,
-   "count": 66
+   "count": 61
   },
   {
    "source": "search: eastern Congo humanitarian",
    "group": "signals.json",
    "ok": true,
-   "count": 28
-  },
-  {
-   "source": "search: southern Lebanon strike",
-   "group": "signals.json",
-   "ok": true,
-   "count": 23
-  },
-  {
-   "source": "search: Hezbollah Israel",
-   "group": "signals.json",
-   "ok": true,
-   "count": 45
-  },
-  {
-   "source": "search: Myanmar junta fighting",
-   "group": "signals.json",
-   "ok": true,
-   "count": 9
-  },
-  {
-   "source": "search: Taliban Pakistan border clashes",
-   "group": "signals.json",
-   "ok": true,
-   "count": 22
+   "count": 25
   },
   {
    "source": "search: Pakistan Afghanistan airstrikes",
@@ -784,16 +760,34 @@
    "count": 19
   },
   {
+   "source": "search: Hezbollah Israel",
+   "group": "signals.json",
+   "ok": true,
+   "count": 42
+  },
+  {
+   "source": "search: southern Lebanon strike",
+   "group": "signals.json",
+   "ok": true,
+   "count": 22
+  },
+  {
    "source": "search: Arakan Army Sittwe",
    "group": "signals.json",
    "ok": true,
    "count": 8
   },
   {
-   "source": "search: M23 Congo",
+   "source": "search: Taliban Pakistan border clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 20
+   "count": 10
+  },
+  {
+   "source": "search: Myanmar junta fighting",
+   "group": "signals.json",
+   "ok": true,
+   "count": 9
   },
   {
    "source": "search: Myanmar airstrike",
@@ -802,10 +796,22 @@
    "count": 7
   },
   {
+   "source": "search: M23 Congo",
+   "group": "signals.json",
+   "ok": true,
+   "count": 20
+  },
+  {
    "source": "search: JNIM attack Mali",
    "group": "signals.json",
    "ok": true,
    "count": 2
+  },
+  {
+   "source": "search: eastern Congo fighting",
+   "group": "signals.json",
+   "ok": true,
+   "count": 17
   },
   {
    "source": "search: Burkina Faso jihadist attack",
@@ -817,31 +823,25 @@
    "source": "search: South Kivu",
    "group": "signals.json",
    "ok": true,
-   "count": 19
+   "count": 36
   },
   {
    "source": "search: Sahel militants",
    "group": "signals.json",
    "ok": true,
-   "count": 2
-  },
-  {
-   "source": "search: eastern Congo fighting",
-   "group": "signals.json",
-   "ok": true,
-   "count": 27
+   "count": 1
   },
   {
    "source": "search: Sinaloa cartel violence",
    "group": "signals.json",
    "ok": true,
-   "count": 4
+   "count": 5
   },
   {
    "source": "search: Port-au-Prince violence",
    "group": "signals.json",
    "ok": true,
-   "count": 13
+   "count": 14
   },
   {
    "source": "search: Culiacan",
@@ -850,22 +850,10 @@
    "count": 1
   },
   {
-   "source": "search: Mexico cartel",
-   "group": "signals.json",
-   "ok": true,
-   "count": 28
-  },
-  {
    "source": "search: Haiti gangs",
    "group": "signals.json",
    "ok": true,
    "count": 81
-  },
-  {
-   "source": "search: Lecornu schools protests",
-   "group": "signals.json",
-   "ok": true,
-   "count": 5
   },
   {
    "source": "search: France lycee protests arrests",
@@ -874,22 +862,28 @@
    "count": 3
   },
   {
-   "source": "search: Belgium student protests Liège",
+   "source": "search: Lecornu schools protests",
    "group": "signals.json",
    "ok": true,
-   "count": 1
+   "count": 5
+  },
+  {
+   "source": "search: Mexico cartel",
+   "group": "signals.json",
+   "ok": true,
+   "count": 41
   },
   {
    "source": "search: France student protests",
    "group": "signals.json",
    "ok": true,
-   "count": 81
+   "count": 69
   },
   {
-   "source": "search: Haiti election December",
+   "source": "search: Belgium student protests Liège",
    "group": "signals.json",
    "ok": true,
-   "count": 10
+   "count": 1
   },
   {
    "source": "search: Haiti displacement",
@@ -913,13 +907,25 @@
    "source": "search: Gaza humanitarian",
    "group": "signals.json",
    "ok": true,
-   "count": 48
+   "count": 20
+  },
+  {
+   "source": "search: Haiti election December",
+   "group": "signals.json",
+   "ok": true,
+   "count": 22
+  },
+  {
+   "source": "search: Afghanistan humanitarian crisis",
+   "group": "signals.json",
+   "ok": true,
+   "count": 22
   },
   {
    "source": "search: Afghan returnees Iran Pakistan",
    "group": "signals.json",
    "ok": true,
-   "count": 17
+   "count": 15
   },
   {
    "source": "search: South Sudan Machar trial",
@@ -928,28 +934,22 @@
    "count": 2
   },
   {
-   "source": "search: Afghanistan aid cuts",
+   "source": "search: South Sudan famine",
    "group": "signals.json",
    "ok": true,
-   "count": 5
-  },
-  {
-   "source": "search: Afghanistan humanitarian crisis",
-   "group": "signals.json",
-   "ok": true,
-   "count": 34
+   "count": 6
   },
   {
    "source": "search: South Sudan violence displacement",
    "group": "signals.json",
    "ok": true,
-   "count": 15
+   "count": 14
   },
   {
-   "source": "search: South Sudan famine",
+   "source": "search: Afghanistan aid cuts",
    "group": "signals.json",
    "ok": true,
-   "count": 8
+   "count": 11
   },
   {
    "source": "search: Yemen displacement",
@@ -961,25 +961,25 @@
    "source": "search: Yemen hunger",
    "group": "signals.json",
    "ok": true,
-   "count": 19
+   "count": 16
   },
   {
    "source": "search: Yemen humanitarian crisis",
    "group": "signals.json",
    "ok": true,
-   "count": 39
+   "count": 40
   },
   {
    "source": "search: Bangladesh clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 8
+   "count": 12
   },
   {
-   "source": "search: Bangladesh attack",
+   "source": "search: Egypt clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 47
+   "count": 23
   },
   {
    "source": "search: Egypt attack",
@@ -988,10 +988,10 @@
    "count": 57
   },
   {
-   "source": "search: Egypt clashes",
+   "source": "search: Bangladesh attack",
    "group": "signals.json",
    "ok": true,
-   "count": 23
+   "count": 47
   },
   {
    "source": "search: Central African Republic attack",
@@ -1003,7 +1003,13 @@
    "source": "search: Central African Republic clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 5
+   "count": 4
+  },
+  {
+   "source": "search: Rwanda clashes",
+   "group": "signals.json",
+   "ok": true,
+   "count": 18
   },
   {
    "source": "search: Rwanda attack",
@@ -1012,16 +1018,22 @@
    "count": 8
   },
   {
+   "source": "search: Algeria clashes",
+   "group": "signals.json",
+   "ok": true,
+   "count": 2
+  },
+  {
    "source": "search: Algeria attack",
    "group": "signals.json",
    "ok": true,
-   "count": 8
+   "count": 7
   },
   {
-   "source": "search: Rwanda clashes",
+   "source": "search: Benin attack",
    "group": "signals.json",
    "ok": true,
-   "count": 17
+   "count": 7
   },
   {
    "source": "search: Benin clashes",
@@ -1030,16 +1042,10 @@
    "count": 4
   },
   {
-   "source": "search: Benin attack",
+   "source": "search: Belize clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 6
-  },
-  {
-   "source": "search: Algeria clashes",
-   "group": "signals.json",
-   "ok": true,
-   "count": 2
+   "count": 1
   },
   {
    "source": "search: Belize attack",
@@ -1048,10 +1054,10 @@
    "count": 6
   },
   {
-   "source": "search: Belize clashes",
+   "source": "search: El Salvador attack",
    "group": "signals.json",
    "ok": true,
-   "count": 1
+   "count": 21
   },
   {
    "source": "search: El Salvador clashes",
@@ -1060,28 +1066,22 @@
    "count": 6
   },
   {
-   "source": "search: Honduras clashes",
-   "group": "signals.json",
-   "ok": true,
-   "count": 2
-  },
-  {
    "source": "search: Honduras attack",
    "group": "signals.json",
    "ok": true,
    "count": 4
   },
   {
-   "source": "search: El Salvador attack",
+   "source": "search: Honduras clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 40
+   "count": 2
   },
   {
    "source": "search: Russia clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 25
+   "count": 26
   },
   {
    "source": "search: Belarus clashes",
@@ -1090,28 +1090,28 @@
    "count": 4
   },
   {
-   "source": "search: Russia attack",
-   "group": "signals.json",
-   "ok": true,
-   "count": 99
-  },
-  {
    "source": "search: Belarus attack",
    "group": "signals.json",
    "ok": true,
    "count": 52
   },
   {
+   "source": "search: Russia attack",
+   "group": "signals.json",
+   "ok": true,
+   "count": 99
+  },
+  {
    "source": "search: Eritrea attack",
    "group": "signals.json",
    "ok": true,
-   "count": 12
+   "count": 18
   },
   {
    "source": "search: Eritrea clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 21
+   "count": 22
   },
   {
    "source": "search: Saudi Arabia clashes",
@@ -1120,46 +1120,34 @@
    "count": 24
   },
   {
-   "source": "search: Canada protest",
-   "group": "signals.json",
-   "ok": true,
-   "count": 43
-  },
-  {
-   "source": "search: Saudi Arabia attack",
-   "group": "signals.json",
-   "ok": true,
-   "count": 96
-  },
-  {
-   "source": "search: United Kingdom protest",
-   "group": "signals.json",
-   "ok": true,
-   "count": 21
-  },
-  {
    "source": "search: Canada attack",
-   "group": "signals.json",
-   "ok": true,
-   "count": 36
-  },
-  {
-   "source": "search: Canada crisis",
-   "group": "signals.json",
-   "ok": true,
-   "count": 59
-  },
-  {
-   "source": "search: United Kingdom attack",
    "group": "signals.json",
    "ok": true,
    "count": 28
   },
   {
-   "source": "search: Japan attack",
+   "source": "search: Saudi Arabia attack",
    "group": "signals.json",
    "ok": true,
-   "count": 19
+   "count": 97
+  },
+  {
+   "source": "search: Canada crisis",
+   "group": "signals.json",
+   "ok": true,
+   "count": 27
+  },
+  {
+   "source": "search: Canada protest",
+   "group": "signals.json",
+   "ok": true,
+   "count": 42
+  },
+  {
+   "source": "search: United Kingdom protest",
+   "group": "signals.json",
+   "ok": true,
+   "count": 38
   },
   {
    "source": "search: Japan protest",
@@ -1171,37 +1159,43 @@
    "source": "search: United Kingdom crisis",
    "group": "signals.json",
    "ok": true,
-   "count": 46
+   "count": 29
   },
   {
-   "source": "search: Australia protest",
+   "source": "search: United Kingdom attack",
    "group": "signals.json",
    "ok": true,
-   "count": 42
+   "count": 27
   },
   {
    "source": "search: Japan crisis",
    "group": "signals.json",
    "ok": true,
-   "count": 37
+   "count": 21
+  },
+  {
+   "source": "search: Australia protest",
+   "group": "signals.json",
+   "ok": true,
+   "count": 18
+  },
+  {
+   "source": "search: Japan attack",
+   "group": "signals.json",
+   "ok": true,
+   "count": 35
   },
   {
    "source": "search: Australia attack",
    "group": "signals.json",
    "ok": true,
-   "count": 39
+   "count": 27
   },
   {
    "source": "search: Australia crisis",
    "group": "signals.json",
    "ok": true,
-   "count": 46
-  },
-  {
-   "source": "search: Jordan protest",
-   "group": "signals.json",
-   "ok": true,
-   "count": 17
+   "count": 28
   },
   {
    "source": "search: Jordan crisis",
@@ -1210,16 +1204,22 @@
    "count": 13
   },
   {
+   "source": "search: Jordan protest",
+   "group": "signals.json",
+   "ok": true,
+   "count": 16
+  },
+  {
    "source": "search: US boat strike drug",
    "group": "signals.json",
    "ok": true,
-   "count": 15
+   "count": 14
   },
   {
    "source": "search: Jordan attack",
    "group": "signals.json",
    "ok": true,
-   "count": 48
+   "count": 46
   },
   {
    "source": "search: US drones Colombia Ecuador cartels",
@@ -1228,34 +1228,34 @@
    "count": 3
   },
   {
-   "source": "search: Gaza ceasefire",
-   "group": "signals.json",
-   "ok": true,
-   "count": 18
-  },
-  {
    "source": "search: al-Shabaab attack",
    "group": "signals.json",
    "ok": true,
    "count": 9
   },
   {
-   "source": "search: Somalia airstrike",
-   "group": "signals.json",
-   "ok": true,
-   "count": 4
-  },
-  {
    "source": "search: Gaza strike",
    "group": "signals.json",
    "ok": true,
-   "count": 63
+   "count": 52
+  },
+  {
+   "source": "search: Somalia airstrike",
+   "group": "signals.json",
+   "ok": true,
+   "count": 5
+  },
+  {
+   "source": "search: Gaza ceasefire",
+   "group": "signals.json",
+   "ok": true,
+   "count": 41
   },
   {
    "source": "search: Boko Haram attack",
    "group": "signals.json",
    "ok": true,
-   "count": 34
+   "count": 18
   },
   {
    "source": "search: Zamfara bandits",
@@ -1264,16 +1264,10 @@
    "count": 6
   },
   {
-   "source": "search: Khyber Pakhtunkhwa militants",
-   "group": "signals.json",
-   "ok": true,
-   "count": 9
-  },
-  {
    "source": "search: ISWAP Borno",
    "group": "signals.json",
    "ok": true,
-   "count": 30
+   "count": 36
   },
   {
    "source": "search: Balochistan attack",
@@ -1282,16 +1276,16 @@
    "count": 20
   },
   {
+   "source": "search: Khyber Pakhtunkhwa militants",
+   "group": "signals.json",
+   "ok": true,
+   "count": 9
+  },
+  {
    "source": "search: SPLA-IO Jonglei",
    "group": "signals.json",
    "ok": true,
    "count": 2
-  },
-  {
-   "source": "search: South Sudan fighting",
-   "group": "signals.json",
-   "ok": true,
-   "count": 26
   },
   {
    "source": "search: FARC dissidents attack",
@@ -1300,16 +1294,22 @@
    "count": 4
   },
   {
-   "source": "search: Colombia ELN rebels",
-   "group": "signals.json",
-   "ok": true,
-   "count": 1
-  },
-  {
    "source": "search: Colombia ELN",
    "group": "signals.json",
    "ok": true,
    "count": 6
+  },
+  {
+   "source": "search: South Sudan fighting",
+   "group": "signals.json",
+   "ok": true,
+   "count": 58
+  },
+  {
+   "source": "search: Colombia ELN rebels",
+   "group": "signals.json",
+   "ok": true,
+   "count": 1
   },
   {
    "source": "search: Cameroon Boko Haram attack",
@@ -1324,16 +1324,16 @@
    "count": 0
   },
   {
-   "source": "search: Ecuador gang violence",
-   "group": "signals.json",
-   "ok": true,
-   "count": 3
-  },
-  {
    "source": "search: Guayaquil killings",
    "group": "signals.json",
    "ok": true,
    "count": 0
+  },
+  {
+   "source": "search: Ecuador gang violence",
+   "group": "signals.json",
+   "ok": true,
+   "count": 4
   },
   {
    "source": "search: Ecuador Noboa",
@@ -1345,31 +1345,31 @@
    "source": "search: India election commission protests",
    "group": "signals.json",
    "ok": true,
-   "count": 29
+   "count": 28
   },
   {
    "source": "search: Gyanesh Kumar resignation protest",
    "group": "signals.json",
    "ok": true,
-   "count": 37
+   "count": 23
   },
   {
    "source": "search: India voter roll revision protest",
    "group": "signals.json",
    "ok": true,
-   "count": 25
+   "count": 24
   },
   {
    "source": "search: Spain housing protests",
    "group": "signals.json",
    "ok": true,
-   "count": 37
+   "count": 23
   },
   {
    "source": "search: Spain general strike housing",
    "group": "signals.json",
    "ok": true,
-   "count": 22
+   "count": 18
   },
   {
    "source": "search: Sanchez snap election",
@@ -1378,28 +1378,22 @@
    "count": 16
   },
   {
+   "source": "search: Niger coup attempt",
+   "group": "signals.json",
+   "ok": true,
+   "count": 2
+  },
+  {
    "source": "search: Serbia election Vucic",
    "group": "signals.json",
    "ok": true,
-   "count": 64
-  },
-  {
-   "source": "search: Serbia student protests",
-   "group": "signals.json",
-   "ok": true,
-   "count": 44
+   "count": 65
   },
   {
    "source": "search: Niger mutiny Tiani",
    "group": "signals.json",
    "ok": true,
-   "count": 0
-  },
-  {
-   "source": "search: Niger coup attempt",
-   "group": "signals.json",
-   "ok": true,
-   "count": 2
+   "count": 1
   },
   {
    "source": "search: Niamey soldiers arrested",
@@ -1408,10 +1402,10 @@
    "count": 1
   },
   {
-   "source": "search: Serbia October 25 election",
+   "source": "search: Serbia student protests",
    "group": "signals.json",
    "ok": true,
-   "count": 56
+   "count": 44
   },
   {
    "source": "search: PTI long march Islamabad",
@@ -1420,19 +1414,25 @@
    "count": 7
   },
   {
-   "source": "search: Flamingo Revolution Albania",
+   "source": "search: Serbia October 25 election",
    "group": "signals.json",
    "ok": true,
-   "count": 7
+   "count": 55
+  },
+  {
+   "source": "search: Imran Khan release protest",
+   "group": "signals.json",
+   "ok": true,
+   "count": 33
   },
   {
    "source": "search: Pakistan PTI arrests",
    "group": "signals.json",
    "ok": true,
-   "count": 26
+   "count": 52
   },
   {
-   "source": "search: Albania Kushner resort protest",
+   "source": "search: Flamingo Revolution Albania",
    "group": "signals.json",
    "ok": true,
    "count": 6
@@ -1441,13 +1441,19 @@
    "source": "search: Albania protests Rama",
    "group": "signals.json",
    "ok": true,
-   "count": 33
+   "count": 48
+  },
+  {
+   "source": "search: Albania Kushner resort protest",
+   "group": "signals.json",
+   "ok": true,
+   "count": 6
   },
   {
    "source": "search: Venezuela protests",
    "group": "signals.json",
    "ok": true,
-   "count": 10
+   "count": 22
   },
   {
    "source": "search: Venezuela blackout protests",
@@ -1456,16 +1462,10 @@
    "count": 1
   },
   {
-   "source": "search: Brussels protest police clashes",
+   "source": "search: Belgium austerity strike protest",
    "group": "signals.json",
    "ok": true,
-   "count": 14
-  },
-  {
-   "source": "search: Imran Khan release protest",
-   "group": "signals.json",
-   "ok": true,
-   "count": 34
+   "count": 3
   },
   {
    "source": "search: Machado return elections Venezuela",
@@ -1474,10 +1474,16 @@
    "count": 43
   },
   {
-   "source": "search: Belgium austerity strike protest",
+   "source": "search: Brussels protest police clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 3
+   "count": 12
+  },
+  {
+   "source": "search: Iraq attack",
+   "group": "signals.json",
+   "ok": true,
+   "count": 26
   },
   {
    "source": "search: Belgium unions government cuts",
@@ -1489,13 +1495,7 @@
    "source": "search: Iraq clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 18
-  },
-  {
-   "source": "search: Iraq attack",
-   "group": "signals.json",
-   "ok": true,
-   "count": 27
+   "count": 16
   },
   {
    "source": "search: Tajikistan attack",
@@ -1513,7 +1513,7 @@
    "source": "search: United Arab Emirates attack",
    "group": "signals.json",
    "ok": true,
-   "count": 33
+   "count": 26
   },
   {
    "source": "search: Kosovo protest Pristina",
@@ -1525,19 +1525,13 @@
    "source": "search: United Arab Emirates clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 37
+   "count": 17
   },
   {
    "source": "search: Kosovo war crimes court protest",
    "group": "signals.json",
    "ok": true,
-   "count": 4
-  },
-  {
-   "source": "search: Second Thomas Shoal",
-   "group": "signals.json",
-   "ok": true,
-   "count": 9
+   "count": 2
   },
   {
    "source": "search: Kosovo president election assembly",
@@ -1546,19 +1540,19 @@
    "count": 5
   },
   {
+   "source": "search: Second Thomas Shoal",
+   "group": "signals.json",
+   "ok": true,
+   "count": 8
+  },
+  {
    "source": "search: South China Sea Philippines",
    "group": "signals.json",
    "ok": true,
-   "count": 45
+   "count": 44
   },
   {
    "source": "search: Cabo Delgado attack",
-   "group": "signals.json",
-   "ok": true,
-   "count": 1
-  },
-  {
-   "source": "search: Mozambique insurgents",
    "group": "signals.json",
    "ok": true,
    "count": 1
@@ -1570,6 +1564,12 @@
    "count": 11
   },
   {
+   "source": "search: Mozambique insurgents",
+   "group": "signals.json",
+   "ok": true,
+   "count": 1
+  },
+  {
    "source": "search: Syria Islamic State attack",
    "group": "signals.json",
    "ok": true,
@@ -1579,7 +1579,7 @@
    "source": "search: Syria clashes",
    "group": "signals.json",
    "ok": true,
-   "count": 27
+   "count": 24
   }
  ]
 }
