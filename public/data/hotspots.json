@@ -1,10 +1,10 @@
 {
- "fetchedAt": "2026-11-04T21:13:53.903Z",
+ "fetchedAt": "2026-11-04T21:40:10.387Z",
  "reviewed": "2026-10-07",
  "index": {
   "score": 76,
   "level": "HIGH",
-  "trend": "steady",
+  "trend": "rising",
   "situations": 98,
   "contributors": [
    {
@@ -23,6 +23,11 @@
     "intensity": 5
    },
    {
+    "id": "sudan-civil-war",
+    "name": "Sudan civil war (SAF vs RSF)",
+    "intensity": 5
+   },
+   {
     "id": "ethiopia-war",
     "name": "Ethiopia war (Tigray, Amhara, Afar)",
     "intensity": 5
@@ -30,11 +35,6 @@
    {
     "id": "drc-east-ebola-displacement",
     "name": "Eastern DR Congo Ebola and displacement crisis",
-    "intensity": 5
-   },
-   {
-    "id": "sudan-civil-war",
-    "name": "Sudan civil war (SAF vs RSF)",
     "intensity": 5
    },
    {
@@ -64,7 +64,7 @@
    ],
    "summary": "In early October 2026, eight months into the war that began 28 February, US–Iran exchanges over Hormuz shipping have resumed (tankers hit, US strikes on Iranian tankers) as talks stall and the US surges a third carrier and ~9,000 more troops.",
    "pins48h": 90,
-   "daily": 540,
+   "daily": 541.5,
    "baseline": 280.5,
    "trend": "rising",
    "status": "covered",
@@ -87,7 +87,7 @@
    ],
    "summary": "In early October 2026 the front remains largely deadlocked heading into a fifth winter while Russia escalates missile and drone strikes on Kyiv and Ukraine hits Russian refineries, as the US pushes trilateral talks and Putin rules out a ceasefire.",
    "pins48h": 90,
-   "daily": 320.5,
+   "daily": 321,
    "baseline": 227.5,
    "trend": "steady",
    "status": "covered",
@@ -109,14 +109,37 @@
     12.6
    ],
    "summary": "After seizing Yemen's entire Red Sea coast, Mocha and Perim Island in September 2026, the IRGC-backed Houthis are bombarding Saudi airports while Saudi Arabia shells Houthi ports, with hundreds killed around Bab el-Mandeb in early October.",
-   "pins48h": 55,
-   "daily": 116,
+   "pins48h": 56,
+   "daily": 117,
    "baseline": 135.9,
    "trend": "steady",
    "status": "covered",
    "auto": false,
    "source": "curated",
    "signals": "Wikipedia: Yemeni civil war (crisis) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
+   "since": null
+  },
+  {
+   "id": "sudan-civil-war",
+   "name": "Sudan civil war (SAF vs RSF)",
+   "kind": "war",
+   "intensity": 5,
+   "countries": [
+    "SDN"
+   ],
+   "center": [
+    30.22,
+    13.18
+   ],
+   "summary": "In October 2026 the army holds the reopened Khartoum–El Obeid corridor while the RSF contests Kordofan and hits besieged El Obeid with drones, and Burhan rejects talks vowing to retake all RSF territory.",
+   "pins48h": 34,
+   "daily": 40.5,
+   "baseline": 40.4,
+   "trend": "steady",
+   "status": "covered",
+   "auto": false,
+   "source": "curated",
+   "signals": "Wikipedia: Sudanese civil wars (tribal conflicts); Ethiopian civil wars (since 2018) (10,000+ deaths)",
    "since": null
   },
   {
@@ -132,7 +155,7 @@
     13.5
    ],
    "summary": "A TPLF-led rebel coalition with Amhara Fano seized Mekelle, Axum and Shire in late September 2026 and pushed into Afar; in early October federal forces drove them out of Afar, retook Mekelle airport and then the city, while Ethiopia and Eritrea cut diplomatic ties and Eritrean troops were reported entering Tigray.",
-   "pins48h": 35,
+   "pins48h": 34,
    "daily": 52,
    "baseline": 36.5,
    "trend": "steady",
@@ -140,6 +163,29 @@
    "auto": false,
    "source": "curated",
    "signals": "Wikipedia: Somali Civil War (since 2009); Ethiopian civil wars (since 2018) (10,000+ deaths) · CrisisWatch: deteriorated",
+   "since": null
+  },
+  {
+   "id": "sudan-famine",
+   "name": "Sudan famine and displacement",
+   "kind": "humanitarian",
+   "intensity": 5,
+   "countries": [
+    "SDN"
+   ],
+   "center": [
+    25.35,
+    13.63
+   ],
+   "summary": "In September 2026 WFP called Sudan the world's largest hunger and displacement crisis (20 million acutely hungry, 14 million displaced, 200,000 in IPC 5 starvation), with famine in El Fasher and Kadugli, cholera and siege-like conditions in El Obeid, and aid cuts looming.",
+   "pins48h": 34,
+   "daily": 40.5,
+   "baseline": 40.4,
+   "trend": "steady",
+   "status": "covered",
+   "auto": false,
+   "source": "curated",
+   "signals": "Wikipedia: Sudanese civil wars (tribal conflicts); Ethiopian civil wars (since 2018) (10,000+ deaths)",
    "since": null
   },
   {
@@ -166,52 +212,6 @@
    "since": null
   },
   {
-   "id": "sudan-civil-war",
-   "name": "Sudan civil war (SAF vs RSF)",
-   "kind": "war",
-   "intensity": 5,
-   "countries": [
-    "SDN"
-   ],
-   "center": [
-    30.22,
-    13.18
-   ],
-   "summary": "In October 2026 the army holds the reopened Khartoum–El Obeid corridor while the RSF contests Kordofan and hits besieged El Obeid with drones, and Burhan rejects talks vowing to retake all RSF territory.",
-   "pins48h": 32,
-   "daily": 39,
-   "baseline": 40.4,
-   "trend": "steady",
-   "status": "covered",
-   "auto": false,
-   "source": "curated",
-   "signals": "Wikipedia: Sudanese civil wars (tribal conflicts); Ethiopian civil wars (since 2018) (10,000+ deaths)",
-   "since": null
-  },
-  {
-   "id": "sudan-famine",
-   "name": "Sudan famine and displacement",
-   "kind": "humanitarian",
-   "intensity": 5,
-   "countries": [
-    "SDN"
-   ],
-   "center": [
-    25.35,
-    13.63
-   ],
-   "summary": "In September 2026 WFP called Sudan the world's largest hunger and displacement crisis (20 million acutely hungry, 14 million displaced, 200,000 in IPC 5 starvation), with famine in El Fasher and Kadugli, cholera and siege-like conditions in El Obeid, and aid cuts looming.",
-   "pins48h": 32,
-   "daily": 39,
-   "baseline": 40.4,
-   "trend": "steady",
-   "status": "covered",
-   "auto": false,
-   "source": "curated",
-   "signals": "Wikipedia: Sudanese civil wars (tribal conflicts); Ethiopian civil wars (since 2018) (10,000+ deaths)",
-   "since": null
-  },
-  {
    "id": "watch-rus",
    "name": "Russia",
    "kind": "war",
@@ -225,7 +225,7 @@
    ],
    "summary": "Wikipedia: Russo-Ukrainian war (since 2022); North Caucasus conflict (10,000+ deaths)",
    "pins48h": 60,
-   "daily": 161.5,
+   "daily": 162.5,
    "baseline": 140.4,
    "trend": "steady",
    "status": "covered",
@@ -246,11 +246,11 @@
     -2,
     54
    ],
-   "summary": "Added automatically: 112.5 events a day, against a usual 74.5.",
+   "summary": "Added automatically: 113.0 events a day, against a usual 74.5.",
    "pins48h": 60,
-   "daily": 112.5,
+   "daily": 113,
    "baseline": 74.5,
-   "trend": "steady",
+   "trend": "rising",
    "status": "covered",
    "auto": true,
    "source": "surge",
@@ -270,8 +270,8 @@
     12.7855
    ],
    "summary": "Renewed multi-front fighting displaced more than 130,000 people in September 2026 across Aden, Hudaydah, Abyan and Taiz, on top of 4.5 million already displaced and 18.6 million needing aid, as UN stocks run low.",
-   "pins48h": 55,
-   "daily": 116,
+   "pins48h": 56,
+   "daily": 117,
    "baseline": 135.9,
    "trend": "steady",
    "status": "covered",
@@ -293,7 +293,7 @@
     -27
    ],
    "summary": "Added automatically: 77.5 events a day, against a usual 43.5.",
-   "pins48h": 50,
+   "pins48h": 48,
    "daily": 77.5,
    "baseline": 43.5,
    "trend": "rising",
@@ -316,8 +316,8 @@
     31.5017
    ],
    "summary": "As of early October 2026 OCHA reports daily strikes and supply restrictions; no area is classed as famine, but 67% of Gazans are food insecure, about 101,000 young children face acute malnutrition, and meal distributions are shrinking for lack of funds.",
-   "pins48h": 42,
-   "daily": 75,
+   "pins48h": 44,
+   "daily": 76.5,
    "baseline": 83.8,
    "trend": "steady",
    "status": "covered",
@@ -338,9 +338,9 @@
     -95,
     60
    ],
-   "summary": "Added automatically: 82.0 events a day, against a usual 37.7.",
-   "pins48h": 39,
-   "daily": 82,
+   "summary": "Added automatically: 83.5 events a day, against a usual 37.7.",
+   "pins48h": 38,
+   "daily": 83.5,
    "baseline": 37.7,
    "trend": "rising",
    "status": "covered",
@@ -373,6 +373,29 @@
    "since": null
   },
   {
+   "id": "watch-sau",
+   "name": "Saudi Arabia",
+   "kind": "war",
+   "intensity": 4,
+   "countries": [
+    "SAU"
+   ],
+   "center": [
+    45,
+    25
+   ],
+   "summary": "Wikipedia: Yemeni civil war (crisis) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
+   "pins48h": 32,
+   "daily": 70.5,
+   "baseline": 79.9,
+   "trend": "steady",
+   "status": "covered",
+   "auto": false,
+   "source": "watchlist",
+   "signals": "Wikipedia: Yemeni civil war (crisis) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
+   "since": null
+  },
+  {
    "id": "auto-jpn",
    "name": "Japan",
    "kind": "war",
@@ -384,9 +407,9 @@
     138,
     36
    ],
-   "summary": "Added automatically: 45.0 events a day, against a usual 45.2.",
+   "summary": "Added automatically: 45.5 events a day, against a usual 45.2.",
    "pins48h": 31,
-   "daily": 45,
+   "daily": 45.5,
    "baseline": 45.2,
    "trend": "steady",
    "status": "covered",
@@ -408,37 +431,14 @@
     48.8566
    ],
    "summary": "Since late September 2026 lycee students, joined by teachers and unions, have protested overcrowded and underfunded schools nationwide; by early October more than 6,000 people (mostly minors) had been arrested, hundreds injured, and PM Lecornu suspended high-school classes for a week. The movement spread to Belgium, where student marches in Liège turned into riots on 1 and 6 October.",
-   "pins48h": 30,
-   "daily": 46,
+   "pins48h": 29,
+   "daily": 46.5,
    "baseline": 94.7,
    "trend": "falling",
    "status": "covered",
    "auto": false,
    "source": "curated",
    "signals": "",
-   "since": null
-  },
-  {
-   "id": "watch-sau",
-   "name": "Saudi Arabia",
-   "kind": "war",
-   "intensity": 4,
-   "countries": [
-    "SAU"
-   ],
-   "center": [
-    45,
-    25
-   ],
-   "summary": "Wikipedia: Yemeni civil war (crisis) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
-   "pins48h": 30,
-   "daily": 69,
-   "baseline": 79.9,
-   "trend": "steady",
-   "status": "covered",
-   "auto": false,
-   "source": "watchlist",
-   "signals": "Wikipedia: Yemeni civil war (crisis) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
    "since": null
   },
   {
@@ -500,8 +500,8 @@
     27
    ],
    "summary": "Wikipedia: Sudanese civil wars (tribal conflicts); Islamic insurgency in Egypt (10,000+ deaths)",
-   "pins48h": 24,
-   "daily": 35.5,
+   "pins48h": 26,
+   "daily": 36.5,
    "baseline": 29.2,
    "trend": "steady",
    "status": "covered",
@@ -730,7 +730,7 @@
     20.15
    ],
    "summary": "In September 2026 the junta launched Operation 4926 to hold Sittwe against the Arakan Army, which inflicted heavy losses, while the Kachin Independence Army cut junta rare-earth revenue in the far north amid a broader stalemate.",
-   "pins48h": 12,
+   "pins48h": 11,
    "daily": 18.5,
    "baseline": 14,
    "trend": "steady",
@@ -962,11 +962,11 @@
     15
    ],
    "summary": "Wikipedia: Mexican drug war; Honduran gang crackdown (10,000+ deaths)",
-   "pins48h": 1,
+   "pins48h": 0,
    "daily": 1.5,
    "baseline": 1.3,
    "trend": "steady",
-   "status": "thin",
+   "status": "quiet",
    "auto": false,
    "source": "watchlist",
    "signals": "Wikipedia: Mexican drug war; Honduran gang crackdown (10,000+ deaths)",
@@ -985,8 +985,8 @@
     31.52
    ],
    "summary": "Three years after 7 October, the October 2025 ceasefire nominally holds but near-daily Israeli drone and air strikes in Gaza City and Khan Younis keep killing Palestinians in October 2026 (1,400+ since the truce).",
-   "pins48h": 42,
-   "daily": 75,
+   "pins48h": 44,
+   "daily": 76.5,
    "baseline": 83.8,
    "trend": "steady",
    "status": "covered",
@@ -1009,36 +1009,13 @@
    ],
    "summary": "After parliament struck down the government's housing-relief decrees on 2 October 2026, tens to hundreds of thousands protested in 50+ cities, unions UGT and CCOO backed a 24-hour general strike, and PM Sanchez called a snap election for 29 November.",
    "pins48h": 26,
-   "daily": 48,
+   "daily": 48.5,
    "baseline": 33.9,
    "trend": "steady",
    "status": "covered",
    "auto": false,
    "source": "curated",
    "signals": "Carnegie: Ceuta border crisis protests",
-   "since": null
-  },
-  {
-   "id": "india-voter-roll-protests",
-   "name": "India voter-roll protests",
-   "kind": "unrest",
-   "intensity": 3,
-   "countries": [
-    "IND"
-   ],
-   "center": [
-    77.209,
-    28.6139
-   ],
-   "summary": "In early October 2026 thousands of youth and opposition supporters marched for days in Delhi and Mumbai demanding Chief Election Commissioner Gyanesh Kumar resign over a voter-roll revision (SIR) they say purged millions to favour the BJP, with police detaining protesters.",
-   "pins48h": 23,
-   "daily": 59,
-   "baseline": 85.4,
-   "trend": "steady",
-   "status": "covered",
-   "auto": false,
-   "source": "curated",
-   "signals": "Wikipedia: Myanmar civil war (since 2021); Kashmir conflict (10,000+ deaths)",
    "since": null
   },
   {
@@ -1085,6 +1062,29 @@
    "auto": false,
    "source": "curated",
    "signals": "Wikipedia: Insurgencies in Pakistan; Afghanistan conflicts (1,000+ deaths) · Carnegie: Fuel price protests",
+   "since": null
+  },
+  {
+   "id": "india-voter-roll-protests",
+   "name": "India voter-roll protests",
+   "kind": "unrest",
+   "intensity": 3,
+   "countries": [
+    "IND"
+   ],
+   "center": [
+    77.209,
+    28.6139
+   ],
+   "summary": "In early October 2026 thousands of youth and opposition supporters marched for days in Delhi and Mumbai demanding Chief Election Commissioner Gyanesh Kumar resign over a voter-roll revision (SIR) they say purged millions to favour the BJP, with police detaining protesters.",
+   "pins48h": 21,
+   "daily": 59,
+   "baseline": 85.4,
+   "trend": "steady",
+   "status": "covered",
+   "auto": false,
+   "source": "curated",
+   "signals": "Wikipedia: Myanmar civil war (since 2021); Kashmir conflict (10,000+ deaths)",
    "since": null
   },
   {
@@ -1297,6 +1297,29 @@
    "since": null
   },
   {
+   "id": "belgium-austerity-protests",
+   "name": "Belgium anti-austerity protests and riots",
+   "kind": "unrest",
+   "intensity": 3,
+   "countries": [
+    "BEL"
+   ],
+   "center": [
+    4.3517,
+    50.8503
+   ],
+   "summary": "Unions and students protest planned government cuts; on 9 October masked youths threw rocks and firecrackers at police at Brussels' central station, and more than 200 people were arrested in Liège with dozens of police injured.",
+   "pins48h": 5,
+   "daily": 9,
+   "baseline": 7.3,
+   "trend": "steady",
+   "status": "covered",
+   "auto": false,
+   "source": "curated",
+   "signals": "",
+   "since": null
+  },
+  {
    "id": "somalia-al-shabaab",
    "name": "Somalia–al-Shabaab insurgency",
    "kind": "insurgency",
@@ -1340,29 +1363,6 @@
    "auto": false,
    "source": "curated",
    "signals": "Wikipedia: Civil conflicts in Nigeria; Cameroonian conflicts (1,000+ deaths)",
-   "since": null
-  },
-  {
-   "id": "belgium-austerity-protests",
-   "name": "Belgium anti-austerity protests and riots",
-   "kind": "unrest",
-   "intensity": 3,
-   "countries": [
-    "BEL"
-   ],
-   "center": [
-    4.3517,
-    50.8503
-   ],
-   "summary": "Unions and students protest planned government cuts; on 9 October masked youths threw rocks and firecrackers at police at Brussels' central station, and more than 200 people were arrested in Liège with dozens of police injured.",
-   "pins48h": 4,
-   "daily": 8.5,
-   "baseline": 7.3,
-   "trend": "steady",
-   "status": "covered",
-   "auto": false,
-   "source": "curated",
-   "signals": "",
    "since": null
   },
   {
@@ -1448,7 +1448,7 @@
    ],
    "summary": "Amid war-driven inflation, retirees from telecoms, social security and steel sectors protested in Tehran, Ahvaz, Rasht, Kermanshah, Isfahan and other cities in early October 2026, and students at Allameh Tabatabai University rallied against hijab enforcement in late September.",
    "pins48h": 90,
-   "daily": 540,
+   "daily": 541.5,
    "baseline": 280.5,
    "trend": "rising",
    "status": "covered",
@@ -1471,7 +1471,7 @@
    ],
    "summary": "Protests against ICE raids and National Guard deployments continue (an ICE agent shot a delivery driver in Austin on 20 September 2026), and nationwide 'No Kings: Vote Early' rallies are set for 17 October ahead of the midterms.",
    "pins48h": 20,
-   "daily": 36,
+   "daily": 37,
    "baseline": 41,
    "trend": "steady",
    "status": "covered",
@@ -1734,6 +1734,29 @@
    "since": null
   },
   {
+   "id": "auto-dnk",
+   "name": "Denmark",
+   "kind": "unrest",
+   "intensity": 2,
+   "countries": [
+    "DNK"
+   ],
+   "center": [
+    10,
+    56
+   ],
+   "summary": "Added automatically: 3.5 events a day, against a usual 0.4.",
+   "pins48h": 2,
+   "daily": 3.5,
+   "baseline": 0.4,
+   "trend": "rising",
+   "status": "covered",
+   "auto": true,
+   "source": "surge",
+   "signals": "",
+   "since": "2026-11-04T19:40:28.949Z"
+  },
+  {
    "id": "syria-instability",
    "name": "Syria (IS insurgency and post-war instability)",
    "kind": "insurgency",
@@ -1872,29 +1895,6 @@
    "since": null
   },
   {
-   "id": "watch-ita",
-   "name": "Italy",
-   "kind": "unrest",
-   "intensity": 2,
-   "countries": [
-    "ITA"
-   ],
-   "center": [
-    12.83,
-    42.83
-   ],
-   "summary": "Carnegie: Ultima Generazione protests",
-   "pins48h": 1,
-   "daily": 1,
-   "baseline": 5.5,
-   "trend": "falling",
-   "status": "covered",
-   "auto": false,
-   "source": "watchlist",
-   "signals": "Carnegie: Ultima Generazione protests",
-   "since": null
-  },
-  {
    "id": "auto-nor",
    "name": "Norway",
    "kind": "war",
@@ -1916,29 +1916,6 @@
    "source": "surge",
    "signals": "",
    "since": "2026-10-20T16:52:41.058Z"
-  },
-  {
-   "id": "auto-dnk",
-   "name": "Denmark",
-   "kind": "unrest",
-   "intensity": 2,
-   "countries": [
-    "DNK"
-   ],
-   "center": [
-    10,
-    56
-   ],
-   "summary": "Added automatically: 3.0 events a day, against a usual 0.4.",
-   "pins48h": 1,
-   "daily": 3,
-   "baseline": 0.4,
-   "trend": "rising",
-   "status": "covered",
-   "auto": true,
-   "source": "surge",
-   "signals": "",
-   "since": "2026-11-04T19:40:28.949Z"
   },
   {
    "id": "auto-bhr",
@@ -2194,6 +2171,29 @@
    "since": null
   },
   {
+   "id": "watch-ita",
+   "name": "Italy",
+   "kind": "unrest",
+   "intensity": 2,
+   "countries": [
+    "ITA"
+   ],
+   "center": [
+    12.83,
+    42.83
+   ],
+   "summary": "Carnegie: Ultima Generazione protests",
+   "pins48h": 0,
+   "daily": 1,
+   "baseline": 5.5,
+   "trend": "falling",
+   "status": "quiet",
+   "auto": false,
+   "source": "watchlist",
+   "signals": "Carnegie: Ultima Generazione protests",
+   "since": null
+  },
+  {
    "id": "auto-rou",
    "name": "Romania",
    "kind": "unrest",
@@ -2230,7 +2230,7 @@
     34.08
    ],
    "summary": "An Indian destroyer and Pakistani patrol vessel collided in the Arabian Sea on 15 September 2026, the first direct military confrontation since the May 2025 war, amid sharpened rhetoric over Kashmir.",
-   "pins48h": 44,
+   "pins48h": 42,
    "daily": 83,
    "baseline": 122.8,
    "trend": "steady",
