@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-10T03:39:35.794Z",
+ "fetchedAt": "2026-11-10T04:16:56.997Z",
  "reviewed": "2026-10-07",
  "index": {
   "score": 76,
@@ -23,13 +23,13 @@
     "intensity": 5
    },
    {
-    "id": "sudan-civil-war",
-    "name": "Sudan civil war (SAF vs RSF)",
+    "id": "ethiopia-war",
+    "name": "Ethiopia war (Tigray, Amhara, Afar)",
     "intensity": 5
    },
    {
-    "id": "ethiopia-war",
-    "name": "Ethiopia war (Tigray, Amhara, Afar)",
+    "id": "sudan-civil-war",
+    "name": "Sudan civil war (SAF vs RSF)",
     "intensity": 5
    },
    {
@@ -64,7 +64,7 @@
    ],
    "summary": "In early October 2026, eight months into the war that began 28 February, US–Iran exchanges over Hormuz shipping have resumed (tankers hit, US strikes on Iranian tankers) as talks stall and the US surges a third carrier and ~9,000 more troops.",
    "pins48h": 90,
-   "daily": 296.5,
+   "daily": 300,
    "baseline": 344.9,
    "trend": "steady",
    "status": "covered",
@@ -87,7 +87,7 @@
    ],
    "summary": "In early October 2026 the front remains largely deadlocked heading into a fifth winter while Russia escalates missile and drone strikes on Kyiv and Ukraine hits Russian refineries, as the US pushes trilateral talks and Putin rules out a ceasefire.",
    "pins48h": 90,
-   "daily": 188.5,
+   "daily": 191.5,
    "baseline": 258.9,
    "trend": "steady",
    "status": "covered",
@@ -109,14 +109,37 @@
     12.6
    ],
    "summary": "After seizing Yemen's entire Red Sea coast, Mocha and Perim Island in September 2026, the IRGC-backed Houthis are bombarding Saudi airports while Saudi Arabia shells Houthi ports, with hundreds killed around Bab el-Mandeb in early October.",
-   "pins48h": 55,
-   "daily": 63.5,
+   "pins48h": 57,
+   "daily": 64.5,
    "baseline": 147.8,
    "trend": "falling",
    "status": "covered",
    "auto": false,
    "source": "curated",
    "signals": "Wikipedia: Yemeni civil war (crisis) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
+   "since": null
+  },
+  {
+   "id": "ethiopia-war",
+   "name": "Ethiopia war (Tigray, Amhara, Afar)",
+   "kind": "war",
+   "intensity": 5,
+   "countries": [
+    "ETH"
+   ],
+   "center": [
+    39.47,
+    13.5
+   ],
+   "summary": "A TPLF-led rebel coalition with Amhara Fano seized Mekelle, Axum and Shire in late September 2026 and pushed into Afar; in early October federal forces drove them out of Afar, retook Mekelle airport and then the city, while Ethiopia and Eritrea cut diplomatic ties and Eritrean troops were reported entering Tigray.",
+   "pins48h": 26,
+   "daily": 14,
+   "baseline": 36.1,
+   "trend": "falling",
+   "status": "covered",
+   "auto": false,
+   "source": "curated",
+   "signals": "Wikipedia: Somali Civil War (since 2009); Ethiopian civil wars (since 2018) (10,000+ deaths) · CrisisWatch: deteriorated",
    "since": null
   },
   {
@@ -132,7 +155,7 @@
     13.18
    ],
    "summary": "In October 2026 the army holds the reopened Khartoum–El Obeid corridor while the RSF contests Kordofan and hits besieged El Obeid with drones, and Burhan rejects talks vowing to retake all RSF territory.",
-   "pins48h": 26,
+   "pins48h": 24,
    "daily": 16,
    "baseline": 43.8,
    "trend": "falling",
@@ -155,7 +178,7 @@
     13.63
    ],
    "summary": "In September 2026 WFP called Sudan the world's largest hunger and displacement crisis (20 million acutely hungry, 14 million displaced, 200,000 in IPC 5 starvation), with famine in El Fasher and Kadugli, cholera and siege-like conditions in El Obeid, and aid cuts looming.",
-   "pins48h": 26,
+   "pins48h": 24,
    "daily": 16,
    "baseline": 43.8,
    "trend": "falling",
@@ -163,29 +186,6 @@
    "auto": false,
    "source": "curated",
    "signals": "Wikipedia: Sudanese civil wars (tribal conflicts); Ethiopian civil wars (since 2018) (10,000+ deaths)",
-   "since": null
-  },
-  {
-   "id": "ethiopia-war",
-   "name": "Ethiopia war (Tigray, Amhara, Afar)",
-   "kind": "war",
-   "intensity": 5,
-   "countries": [
-    "ETH"
-   ],
-   "center": [
-    39.47,
-    13.5
-   ],
-   "summary": "A TPLF-led rebel coalition with Amhara Fano seized Mekelle, Axum and Shire in late September 2026 and pushed into Afar; in early October federal forces drove them out of Afar, retook Mekelle airport and then the city, while Ethiopia and Eritrea cut diplomatic ties and Eritrean troops were reported entering Tigray.",
-   "pins48h": 24,
-   "daily": 13.5,
-   "baseline": 36.1,
-   "trend": "falling",
-   "status": "covered",
-   "auto": false,
-   "source": "curated",
-   "signals": "Wikipedia: Somali Civil War (since 2009); Ethiopian civil wars (since 2018) (10,000+ deaths) · CrisisWatch: deteriorated",
    "since": null
   },
   {
@@ -201,8 +201,8 @@
     1.5667
    ],
    "summary": "As of late September 2026 a Bundibugyo-strain Ebola epidemic centred on Ituri and North Kivu had reached 8,067 cases and 3,901 deaths, the worst in DRC history, while fighting drove thousands from Bunia's Kigonze camp and displacement nationwide neared 8 million.",
-   "pins48h": 19,
-   "daily": 7.5,
+   "pins48h": 20,
+   "daily": 8,
    "baseline": 20.1,
    "trend": "falling",
    "status": "covered",
@@ -248,7 +248,7 @@
    ],
    "summary": "Wikipedia: Russo-Ukrainian war (since 2022); North Caucasus conflict (10,000+ deaths)",
    "pins48h": 60,
-   "daily": 77,
+   "daily": 77.5,
    "baseline": 151.4,
    "trend": "steady",
    "status": "covered",
@@ -269,9 +269,9 @@
     -2,
     54
    ],
-   "summary": "Added automatically: 51.0 events a day, against a usual 89.2.",
+   "summary": "Added automatically: 52.0 events a day, against a usual 89.2.",
    "pins48h": 60,
-   "daily": 51,
+   "daily": 52,
    "baseline": 89.2,
    "trend": "steady",
    "status": "covered",
@@ -293,8 +293,8 @@
     12.7855
    ],
    "summary": "Renewed multi-front fighting displaced more than 130,000 people in September 2026 across Aden, Hudaydah, Abyan and Taiz, on top of 4.5 million already displaced and 18.6 million needing aid, as UN stocks run low.",
-   "pins48h": 55,
-   "daily": 63.5,
+   "pins48h": 57,
+   "daily": 64.5,
    "baseline": 147.8,
    "trend": "falling",
    "status": "covered",
@@ -361,9 +361,9 @@
     138,
     36
    ],
-   "summary": "Added automatically: 22.0 events a day, against a usual 50.6.",
-   "pins48h": 32,
-   "daily": 22,
+   "summary": "Added automatically: 23.5 events a day, against a usual 50.6.",
+   "pins48h": 33,
+   "daily": 23.5,
    "baseline": 50.6,
    "trend": "falling",
    "status": "covered",
@@ -371,29 +371,6 @@
    "source": "surge",
    "signals": "",
    "since": "2026-10-08T06:34:46.064Z"
-  },
-  {
-   "id": "watch-sau",
-   "name": "Saudi Arabia",
-   "kind": "war",
-   "intensity": 4,
-   "countries": [
-    "SAU"
-   ],
-   "center": [
-    45,
-    25
-   ],
-   "summary": "Wikipedia: Yemeni civil war (crisis) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
-   "pins48h": 31,
-   "daily": 54.5,
-   "baseline": 85.2,
-   "trend": "steady",
-   "status": "covered",
-   "auto": false,
-   "source": "watchlist",
-   "signals": "Wikipedia: Yemeni civil war (crisis) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
-   "since": null
   },
   {
    "id": "auto-aus",
@@ -417,6 +394,29 @@
    "source": "surge",
    "signals": "",
    "since": "2026-10-19T22:11:47.005Z"
+  },
+  {
+   "id": "watch-sau",
+   "name": "Saudi Arabia",
+   "kind": "war",
+   "intensity": 4,
+   "countries": [
+    "SAU"
+   ],
+   "center": [
+    45,
+    25
+   ],
+   "summary": "Wikipedia: Yemeni civil war (crisis) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
+   "pins48h": 29,
+   "daily": 55.5,
+   "baseline": 85.2,
+   "trend": "steady",
+   "status": "covered",
+   "auto": false,
+   "source": "watchlist",
+   "signals": "Wikipedia: Yemeni civil war (crisis) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
+   "since": null
   },
   {
    "id": "israel-hezbollah-lebanon",
@@ -455,7 +455,7 @@
    ],
    "summary": "Two years into the Chapitos–Mayos war (3,000+ dead) Culiacán remains a battleground in September 2026, while the February killing of CJNG chief El Mencho set off the largest wave of cartel retaliation in years.",
    "pins48h": 26,
-   "daily": 25,
+   "daily": 26,
    "baseline": 26.7,
    "trend": "steady",
    "status": "covered",
@@ -477,8 +477,8 @@
     34.53
    ],
    "summary": "Direct Pakistan–Taliban hostilities resumed 18 September 2026 after a mass-casualty militant attack, and in early October Pakistan was still striking Kunar, Helmand, Khost, Paktika and Kandahar into a third week.",
-   "pins48h": 25,
-   "daily": 16.5,
+   "pins48h": 24,
+   "daily": 17,
    "baseline": 30.5,
    "trend": "steady",
    "status": "covered",
@@ -500,8 +500,8 @@
     34.5553
    ],
    "summary": "Some 21.9 million Afghans need aid in 2026 as about five million returnees forced back from Iran and Pakistan, renewed Pakistani airstrikes in September, floods and deep funding cuts compound the crisis.",
-   "pins48h": 25,
-   "daily": 16.5,
+   "pins48h": 24,
+   "daily": 17,
    "baseline": 30.5,
    "trend": "steady",
    "status": "covered",
@@ -523,7 +523,7 @@
     27
    ],
    "summary": "Wikipedia: Sudanese civil wars (tribal conflicts); Islamic insurgency in Egypt (10,000+ deaths)",
-   "pins48h": 23,
+   "pins48h": 22,
    "daily": 15,
    "baseline": 34,
    "trend": "falling",
@@ -531,6 +531,75 @@
    "auto": false,
    "source": "watchlist",
    "signals": "Wikipedia: Sudanese civil wars (tribal conflicts); Islamic insurgency in Egypt (10,000+ deaths)",
+   "since": null
+  },
+  {
+   "id": "eastern-drc",
+   "name": "Eastern DR Congo war (M23/AFC)",
+   "kind": "war",
+   "intensity": 4,
+   "countries": [
+    "COD"
+   ],
+   "center": [
+    29.22,
+    -1.68
+   ],
+   "summary": "In September 2026 Congolese army, Wazalendo and Burundian troops pressed counter-offensives in Masisi, Walikale and the Minembwe highlands against Rwanda-backed M23/AFC and allied Twirwaneho, despite ceasefire verification missions.",
+   "pins48h": 20,
+   "daily": 8,
+   "baseline": 20.1,
+   "trend": "falling",
+   "status": "covered",
+   "auto": false,
+   "source": "curated",
+   "signals": "Wikipedia: Congolese conflicts; Central African Republic Civil War (10,000+ deaths) · CrisisWatch: deteriorated",
+   "since": null
+  },
+  {
+   "id": "haiti-gang-war",
+   "name": "Haiti gang war",
+   "kind": "insurgency",
+   "intensity": 4,
+   "countries": [
+    "HTI"
+   ],
+   "center": [
+    -72.34,
+    18.54
+   ],
+   "summary": "Viv Ansanm gangs still control most of Port-au-Prince after an August 2026 massacre of 47 in Kenscoff, and on 29 September the UN extended the Gang Suppression Force to March 2027 to secure elections.",
+   "pins48h": 20,
+   "daily": 16.5,
+   "baseline": 23.6,
+   "trend": "steady",
+   "status": "covered",
+   "auto": false,
+   "source": "curated",
+   "signals": "Wikipedia: Haitian conflict (since 2020) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
+   "since": null
+  },
+  {
+   "id": "haiti-gang-crisis",
+   "name": "Haiti gang violence and displacement",
+   "kind": "humanitarian",
+   "intensity": 4,
+   "countries": [
+    "HTI"
+   ],
+   "center": [
+    -72.3388,
+    18.5944
+   ],
+   "summary": "Gang violence is at 2024-crisis levels with about 1.5 million people displaced and 5.8 million acutely food insecure as of September 2026, while PM Fils-Aime governs alone ahead of elections set for 13 December.",
+   "pins48h": 20,
+   "daily": 16.5,
+   "baseline": 23.6,
+   "trend": "steady",
+   "status": "covered",
+   "auto": false,
+   "source": "curated",
+   "signals": "Wikipedia: Haitian conflict (since 2020) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
    "since": null
   },
   {
@@ -557,73 +626,27 @@
    "since": "2026-10-23T17:50:09.711Z"
   },
   {
-   "id": "eastern-drc",
-   "name": "Eastern DR Congo war (M23/AFC)",
-   "kind": "war",
+   "id": "auto-prt",
+   "name": "Portugal",
+   "kind": "unrest",
    "intensity": 4,
    "countries": [
-    "COD"
+    "PRT"
    ],
    "center": [
-    29.22,
-    -1.68
+    -8,
+    39.5
    ],
-   "summary": "In September 2026 Congolese army, Wazalendo and Burundian troops pressed counter-offensives in Masisi, Walikale and the Minembwe highlands against Rwanda-backed M23/AFC and allied Twirwaneho, despite ceasefire verification missions.",
-   "pins48h": 19,
-   "daily": 7.5,
-   "baseline": 20.1,
-   "trend": "falling",
-   "status": "covered",
-   "auto": false,
-   "source": "curated",
-   "signals": "Wikipedia: Congolese conflicts; Central African Republic Civil War (10,000+ deaths) · CrisisWatch: deteriorated",
-   "since": null
-  },
-  {
-   "id": "haiti-gang-war",
-   "name": "Haiti gang war",
-   "kind": "insurgency",
-   "intensity": 4,
-   "countries": [
-    "HTI"
-   ],
-   "center": [
-    -72.34,
-    18.54
-   ],
-   "summary": "Viv Ansanm gangs still control most of Port-au-Prince after an August 2026 massacre of 47 in Kenscoff, and on 29 September the UN extended the Gang Suppression Force to March 2027 to secure elections.",
-   "pins48h": 19,
-   "daily": 15.5,
-   "baseline": 23.6,
+   "summary": "Added automatically: 11.5 events a day, against a usual 10.2.",
+   "pins48h": 17,
+   "daily": 11.5,
+   "baseline": 10.2,
    "trend": "steady",
    "status": "covered",
-   "auto": false,
-   "source": "curated",
-   "signals": "Wikipedia: Haitian conflict (since 2020) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
-   "since": null
-  },
-  {
-   "id": "haiti-gang-crisis",
-   "name": "Haiti gang violence and displacement",
-   "kind": "humanitarian",
-   "intensity": 4,
-   "countries": [
-    "HTI"
-   ],
-   "center": [
-    -72.3388,
-    18.5944
-   ],
-   "summary": "Gang violence is at 2024-crisis levels with about 1.5 million people displaced and 5.8 million acutely food insecure as of September 2026, while PM Fils-Aime governs alone ahead of elections set for 13 December.",
-   "pins48h": 19,
-   "daily": 15.5,
-   "baseline": 23.6,
-   "trend": "steady",
-   "status": "covered",
-   "auto": false,
-   "source": "curated",
-   "signals": "Wikipedia: Haitian conflict (since 2020) (1,000+ deaths) · CrisisWatch: conflict risk alert, deteriorated",
-   "since": null
+   "auto": true,
+   "source": "surge",
+   "signals": "",
+   "since": "2026-10-20T23:21:01.700Z"
   },
   {
    "id": "watch-bgd",
@@ -649,29 +672,6 @@
    "since": null
   },
   {
-   "id": "auto-prt",
-   "name": "Portugal",
-   "kind": "unrest",
-   "intensity": 4,
-   "countries": [
-    "PRT"
-   ],
-   "center": [
-    -8,
-    39.5
-   ],
-   "summary": "Added automatically: 11.5 events a day, against a usual 10.2.",
-   "pins48h": 16,
-   "daily": 11.5,
-   "baseline": 10.2,
-   "trend": "steady",
-   "status": "covered",
-   "auto": true,
-   "source": "surge",
-   "signals": "",
-   "since": "2026-10-20T23:21:01.700Z"
-  },
-  {
    "id": "auto-qat",
    "name": "Qatar",
    "kind": "war",
@@ -684,7 +684,7 @@
     25.5
    ],
    "summary": "Added automatically: 14.0 events a day, against a usual 9.8.",
-   "pins48h": 15,
+   "pins48h": 16,
    "daily": 14,
    "baseline": 9.8,
    "trend": "steady",
@@ -708,7 +708,7 @@
    ],
    "summary": "In September 2026 the junta launched Operation 4926 to hold Sittwe against the Arakan Army, which inflicted heavy losses, while the Kachin Independence Army cut junta rare-earth revenue in the far north amid a broader stalemate.",
    "pins48h": 10,
-   "daily": 8.5,
+   "daily": 9,
    "baseline": 15.2,
    "trend": "steady",
    "status": "covered",
@@ -733,7 +733,7 @@
    ],
    "summary": "In September 2026 al-Qaeda's JNIM killed 100+ Malian soldiers at Dioura, struck Russian helicopters at Sévaré airport and overran Burkinabe posts near Bobo-Dioulasso and Ouahigouya, while clashing with Islamic State Sahel.",
    "pins48h": 10,
-   "daily": 8,
+   "daily": 8.5,
    "baseline": 10.5,
    "trend": "steady",
    "status": "covered",
@@ -835,6 +835,29 @@
    "since": null
   },
   {
+   "id": "watch-slv",
+   "name": "El Salvador",
+   "kind": "war",
+   "intensity": 4,
+   "countries": [
+    "SLV"
+   ],
+   "center": [
+    -88.92,
+    13.83
+   ],
+   "summary": "Wikipedia: Mexican drug war; Salvadoran gang crackdown (10,000+ deaths)",
+   "pins48h": 6,
+   "daily": 3,
+   "baseline": 6.9,
+   "trend": "falling",
+   "status": "covered",
+   "auto": false,
+   "source": "watchlist",
+   "signals": "Wikipedia: Mexican drug war; Salvadoran gang crackdown (10,000+ deaths)",
+   "since": null
+  },
+  {
    "id": "watch-blr",
    "name": "Belarus",
    "kind": "war",
@@ -878,29 +901,6 @@
    "auto": false,
    "source": "watchlist",
    "signals": "Wikipedia: Islamist insurgencies in the Maghreb/Sahel (10,000+ deaths)",
-   "since": null
-  },
-  {
-   "id": "watch-slv",
-   "name": "El Salvador",
-   "kind": "war",
-   "intensity": 4,
-   "countries": [
-    "SLV"
-   ],
-   "center": [
-    -88.92,
-    13.83
-   ],
-   "summary": "Wikipedia: Mexican drug war; Salvadoran gang crackdown (10,000+ deaths)",
-   "pins48h": 5,
-   "daily": 2.5,
-   "baseline": 6.9,
-   "trend": "falling",
-   "status": "covered",
-   "auto": false,
-   "source": "watchlist",
-   "signals": "Wikipedia: Mexican drug war; Salvadoran gang crackdown (10,000+ deaths)",
    "since": null
   },
   {
@@ -1008,7 +1008,7 @@
     40.4168
    ],
    "summary": "After parliament struck down the government's housing-relief decrees on 2 October 2026, tens to hundreds of thousands protested in 50+ cities, unions UGT and CCOO backed a 24-hour general strike, and PM Sanchez called a snap election for 29 November.",
-   "pins48h": 25,
+   "pins48h": 24,
    "daily": 25,
    "baseline": 36,
    "trend": "steady",
@@ -1031,7 +1031,7 @@
     30.18
    ],
    "summary": "In September 2026 a suicide car-bomb assault on a Kohat police complex killed 31, Balochistan overtook Khyber Pakhtunkhwa as the most violent province, and Pakistan expanded its Operation Ghazab lil Haq counter-terror campaign.",
-   "pins48h": 20,
+   "pins48h": 19,
    "daily": 14,
    "baseline": 36,
    "trend": "falling",
@@ -1054,8 +1054,8 @@
     28.6139
    ],
    "summary": "In early October 2026 thousands of youth and opposition supporters marched for days in Delhi and Mumbai demanding Chief Election Commissioner Gyanesh Kumar resign over a voter-roll revision (SIR) they say purged millions to favour the BJP, with police detaining protesters.",
-   "pins48h": 20,
-   "daily": 18,
+   "pins48h": 19,
+   "daily": 18.5,
    "baseline": 76.2,
    "trend": "falling",
    "status": "covered",
@@ -1077,7 +1077,7 @@
     33.6844
    ],
    "summary": "After mass pre-emptive arrests and road closures foiled a 27 September 2026 march, Imran Khan's PTI launched a long march on Islamabad from Khyber Pakhtunkhwa on 4 October, which the government vows to stop before it enters the capital.",
-   "pins48h": 20,
+   "pins48h": 19,
    "daily": 14,
    "baseline": 36,
    "trend": "falling",
@@ -1100,8 +1100,8 @@
     33
    ],
    "summary": "Wikipedia: Insurgencies in Iran (2026 Iran war); Aftermath/Spillover of the Syrian civil war (1,000+ deaths)",
-   "pins48h": 20,
-   "daily": 25.5,
+   "pins48h": 19,
+   "daily": 26,
    "baseline": 17.9,
    "trend": "steady",
    "status": "covered",
@@ -1264,9 +1264,9 @@
    ],
    "summary": "A 28-29 August 2026 mutiny by young officers ('Armed Forces for the Restoration of the Fatherland') attacked the presidential palace, airport and state TV in Niamey; dozens of soldiers were arrested and in September the junta blamed Benin and others as rifts in Tiani's military leadership surfaced.",
    "pins48h": 4,
-   "daily": 3,
+   "daily": 3.5,
    "baseline": 6,
-   "trend": "falling",
+   "trend": "steady",
    "status": "covered",
    "auto": false,
    "source": "curated",
@@ -1448,7 +1448,7 @@
    ],
    "summary": "Amid war-driven inflation, retirees from telecoms, social security and steel sectors protested in Tehran, Ahvaz, Rasht, Kermanshah, Isfahan and other cities in early October 2026, and students at Allameh Tabatabai University rallied against hijab enforcement in late September.",
    "pins48h": 90,
-   "daily": 296.5,
+   "daily": 300,
    "baseline": 344.9,
    "trend": "steady",
    "status": "covered",
@@ -1471,7 +1471,7 @@
    ],
    "summary": "Protests against ICE raids and National Guard deployments continue (an ICE agent shot a delivery driver in Austin on 20 September 2026), and nationwide 'No Kings: Vote Early' rallies are set for 17 October ahead of the midterms.",
    "pins48h": 20,
-   "daily": 15.5,
+   "daily": 16,
    "baseline": 39.5,
    "trend": "falling",
    "status": "covered",
@@ -1516,8 +1516,8 @@
     35
    ],
    "summary": "Wikipedia: Kashmir conflict (100+ deaths)",
-   "pins48h": 9,
-   "daily": 6,
+   "pins48h": 10,
+   "daily": 6.5,
    "baseline": 11,
    "trend": "steady",
    "status": "covered",
@@ -1547,29 +1547,6 @@
    "auto": false,
    "source": "curated",
    "signals": "Wikipedia: Insurgencies in Iran (2026 Iran war); Kurdish nationalist conflicts (1,000+ deaths)",
-   "since": null
-  },
-  {
-   "id": "watch-zaf",
-   "name": "South Africa",
-   "kind": "unrest",
-   "intensity": 2,
-   "countries": [
-    "ZAF"
-   ],
-   "center": [
-    24,
-    -29
-   ],
-   "summary": "Carnegie: Service delivery protests",
-   "pins48h": 4,
-   "daily": 2,
-   "baseline": 1,
-   "trend": "steady",
-   "status": "covered",
-   "auto": false,
-   "source": "watchlist",
-   "signals": "Carnegie: Service delivery protests",
    "since": null
   },
   {
@@ -1616,6 +1593,29 @@
    "auto": false,
    "source": "curated",
    "signals": "Wikipedia: Civil conflict in the Philippines; Cross border attacks in Sabah/Drug trafficking in Malaysia (100+ deaths)",
+   "since": null
+  },
+  {
+   "id": "watch-zaf",
+   "name": "South Africa",
+   "kind": "unrest",
+   "intensity": 2,
+   "countries": [
+    "ZAF"
+   ],
+   "center": [
+    24,
+    -29
+   ],
+   "summary": "Carnegie: Service delivery protests",
+   "pins48h": 3,
+   "daily": 2,
+   "baseline": 1,
+   "trend": "steady",
+   "status": "covered",
+   "auto": false,
+   "source": "watchlist",
+   "signals": "Carnegie: Service delivery protests",
    "since": null
   },
   {
@@ -1708,6 +1708,29 @@
    "auto": false,
    "source": "curated",
    "signals": "Wikipedia: Colombian conflict; Ecuadorian conflict (1,000+ deaths)",
+   "since": null
+  },
+  {
+   "id": "indonesia-anti-government-protests",
+   "name": "Indonesia anti-government protests",
+   "kind": "unrest",
+   "intensity": 2,
+   "countries": [
+    "IDN"
+   ],
+   "center": [
+    106.8456,
+    -6.2088
+   ],
+   "summary": "A 27 August 2026 anti-corruption protest at Jakarta's parliament turned into riots in which pro-Prabowo militia GRIB Jaya was accused of attacking residents, extending a student-led protest wave over economic strain and fuel prices.",
+   "pins48h": 1,
+   "daily": 0.5,
+   "baseline": 2.5,
+   "trend": "falling",
+   "status": "covered",
+   "auto": false,
+   "source": "curated",
+   "signals": "Wikipedia: Papua conflict (100+ deaths)",
    "since": null
   },
   {
@@ -1846,29 +1869,6 @@
    "auto": false,
    "source": "curated",
    "signals": "Wikipedia: Brazilian drug war (100+ deaths)",
-   "since": null
-  },
-  {
-   "id": "indonesia-anti-government-protests",
-   "name": "Indonesia anti-government protests",
-   "kind": "unrest",
-   "intensity": 2,
-   "countries": [
-    "IDN"
-   ],
-   "center": [
-    106.8456,
-    -6.2088
-   ],
-   "summary": "A 27 August 2026 anti-corruption protest at Jakarta's parliament turned into riots in which pro-Prabowo militia GRIB Jaya was accused of attacking residents, extending a student-led protest wave over economic strain and fuel prices.",
-   "pins48h": 0,
-   "daily": 0,
-   "baseline": 2.5,
-   "trend": "falling",
-   "status": "quiet",
-   "auto": false,
-   "source": "curated",
-   "signals": "Wikipedia: Papua conflict (100+ deaths)",
    "since": null
   },
   {
@@ -2230,8 +2230,8 @@
     34.08
    ],
    "summary": "An Indian destroyer and Pakistani patrol vessel collided in the Arabian Sea on 15 September 2026, the first direct military confrontation since the May 2025 war, amid sharpened rhetoric over Kashmir.",
-   "pins48h": 40,
-   "daily": 32,
+   "pins48h": 38,
+   "daily": 32.5,
    "baseline": 112.2,
    "trend": "falling",
    "status": "covered",
